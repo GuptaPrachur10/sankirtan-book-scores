@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ISKCON London · Book Distribution</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:       #111827;
+  --navy-mid:   #1c2340;
+  --navy-light: #242d4e;
+  --navy-card:  #1a2240;
+  --gold:       #f0b429;
+  --gold-dim:   #c8941a;
+  --orange:     #e07b10;
+  --white:      #f4f6ff;
+  --muted:      #6b7499;
+  --border:     rgba(240,180,41,0.15);
+  --danger:     #e05555;
+  --success:    #34c47c;
+  --radius:     12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { height: 100%; }
+
+body {
+  height: 100%;
+  background: var(--navy);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--white);
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── PHONE SHELL ── */
+.shell {
+  width: 100%;
+  max-width: 430px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--navy);
+}
+
+/* ── HEADER ── */
+header {
+  flex-shrink: 0;
+  background: var(--navy-mid);
+  border-bottom: 1.5px solid var(--border);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+  z-index: 10;
+}
+
+.hdr-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 5px rgba(240,180,41,0.25));
+}
+
+.hdr-fields {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.hdr-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.hdr-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-left: 2px;
+}
+
+.hdr-select, .hdr-date {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 8px;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  min-width: 0;
+}
+
+.hdr-select:focus, .hdr-date:focus {
+  border-color: var(--gold);
+}
+
+.hdr-select option { background: var(--navy); }
+
+/* ── SCROLL BODY ── */
+.scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-body::-webkit-scrollbar { width: 3px; }
+.scroll-body::-webkit-scrollbar-thumb {
+  background: rgba(240,180,41,0.2);
+  border-radius: 3px;
+}
+
+/* ── MIC SECTION ── */
+.mic-section {
+  flex-shrink: 0;
+  background: var(--navy-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mic-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px;
+  border-radius: 9px;
+  border: 1.5px solid rgba(240,180,41,0.3);
+  background: rgba(240,180,41,0.05);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  position: relative;
+}
+
+.mic-btn:active { transform: scale(0.98); }
+
+.mic-btn.recording {
+  border-color: var(--danger);
+  background: rgba(224,85,85,0.08);
+  color: var(--danger);
+}
+
+.mic-btn.recording .mic-dot {
+  animation: blink 0.9s infinite;
+}
+
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+.mic-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+.mic-btn.recording .mic-dot { background: var(--danger); }
+
+.mic-hint {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* transcript */
+.transcript-wrap {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.transcript-wrap.visible { display: flex; }
+
+.transcript-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(240,180,41,0.12);
+  border-radius: 8px;
+  padding: 9px 11px;
+  font-size: 13px;
+  color: #b8bedd;
+  font-style: italic;
+  line-height: 1.5;
+  min-height: 38px;
+}
+
+.transcript-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.btn-parse {
+  flex: 1;
+  background: linear-gradient(135deg, var(--orange), #b06010);
+  border: none;
+  border-radius: 8px;
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 9px;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: opacity 0.15s;
+}
+
+.btn-parse:disabled { opacity: 0.45; cursor: default; }
+
+.btn-discard {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 13px;
+  cursor: pointer;
+}
+
+/* ── BOOKS PANEL ── */
+.books-panel {
+  flex: 1;
+  background: var(--navy-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 180px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 13px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.12);
+}
+
+.panel-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.total-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gold);
+  background: rgba(240,180,41,0.1);
+  border: 1px solid rgba(240,180,41,0.2);
+  border-radius: 20px;
+  padding: 2px 10px;
+}
+
+.col-heads {
+  display: grid;
+  grid-template-columns: 1fr 100px 34px;
+  gap: 8px;
+  padding: 6px 13px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  flex-shrink: 0;
+}
+
+.col-head {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(107,116,153,0.7);
+}
+
+.col-head.c { text-align: center; }
+
+.entries-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.entries-list::-webkit-scrollbar { width: 2px; }
+.entries-list::-webkit-scrollbar-thumb { background: rgba(240,180,41,0.15); }
+
+.entry-row {
+  display: grid;
+  grid-template-columns: 1fr 100px 34px;
+  gap: 8px;
+  align-items: center;
+  animation: rowIn 0.18s ease;
+}
+
+@keyframes rowIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.entry-row select {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(240,180,41,0.1);
+  border-radius: 7px;
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 8px;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.12s;
+}
+
+.entry-row select:focus { border-color: var(--gold); }
+.entry-row select option { background: var(--navy); }
+
+.qty-row {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(240,180,41,0.1);
+  border-radius: 7px;
+  overflow: hidden;
+  height: 34px;
+}
+
+.q-btn {
+  width: 28px;
+  height: 100%;
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.1s;
+}
+
+.q-btn:active { background: rgba(240,180,41,0.12); }
+
+.q-num {
+  flex: 1;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  border-left: 1px solid rgba(240,180,41,0.1);
+  border-right: 1px solid rgba(240,180,41,0.1);
+  color: var(--white);
+}
+
+.rm-btn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-size: 15px;
+  cursor: pointer;
+  opacity: 0.4;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.12s;
+  border-radius: 7px;
+}
+
+.rm-btn:active { opacity: 1; }
+
+.add-entry-btn {
+  width: calc(100% - 20px);
+  margin: 6px 10px 8px;
+  background: transparent;
+  border: 1px dashed rgba(240,180,41,0.25);
+  border-radius: 7px;
+  color: var(--gold);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: all 0.14s;
+  flex-shrink: 0;
+}
+
+.add-entry-btn:active {
+  background: rgba(240,180,41,0.07);
+  border-color: var(--gold);
+}
+
+/* ── FOOTER ── */
+footer {
+  flex-shrink: 0;
+  background: var(--navy-mid);
+  border-top: 1.5px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 -2px 20px rgba(0,0,0,0.35);
+  z-index: 10;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+  min-width: 0;
+}
+
+.footer-logo {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 4px rgba(240,180,41,0.2));
+}
+
+.footer-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 17px;
+  letter-spacing: 2.5px;
+  line-height: 1;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.submit-btn {
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  border: none;
+  border-radius: 10px;
+  color: var(--navy);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2.5px;
+  padding: 11px 22px;
+  cursor: pointer;
+  transition: all 0.18s;
+  box-shadow: 0 3px 14px rgba(240,180,41,0.25);
+}
+
+.submit-btn:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+/* ── MODAL OVERLAY ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(3px);
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--navy-mid);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: popIn 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.modal-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.modal-icon.success { background: rgba(52,196,124,0.15); color: var(--success); }
+.modal-icon.error   { background: rgba(224,85,85,0.15);  color: var(--danger); }
+
+.modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.modal-msg {
+  font-size: 14px;
+  color: #9ba3c8;
+  text-align: center;
+  line-height: 1.55;
+}
+
+.modal-close {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 9px;
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 11px;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.15s;
+}
+
+.modal-close:active { background: rgba(255,255,255,0.12); }
+
+.spinner {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Prevent body scroll on iOS when modal open */
+body.modal-open { overflow: hidden; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- HEADER -->
+  <header>
+    <img class="hdr-logo" src="1000035749.webp" alt="ISKCON London" onerror="this.style.display='none'">
+    <div class="hdr-fields">
+      <div class="hdr-field">
+        <span class="hdr-label">Team</span>
+        <select class="hdr-select" id="teamSelect">
+          <option value="">-- Select --</option>
+        </select>
+      </div>
+      <div class="hdr-field">
+        <span class="hdr-label">Date</span>
+        <input class="hdr-date" type="date" id="dateInput">
+      </div>
+    </div>
+  </header>
+
+  <!-- SCROLLABLE BODY -->
+  <div class="scroll-body">
+
+    <!-- MIC -->
+    <div class="mic-section">
+      <button class="mic-btn" id="micBtn" onclick="toggleRec()">
+        <div class="mic-dot" id="micDot"></div>
+        <span id="micLabel">Tap to Speak</span>
+      </button>
+      <div class="mic-hint" id="micHint">Say book names and quantities — e.g. "ten gitas, five small books"</div>
+
+      <div class="transcript-wrap" id="transcriptWrap">
+        <div class="transcript-box" id="transcriptBox"></div>
+        <div class="transcript-actions">
+          <button class="btn-parse" id="parseBtn" onclick="parseTranscript()">Add to List</button>
+          <button class="btn-discard" onclick="discardTranscript()">Discard</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOOKS -->
+    <div class="books-panel">
+      <div class="panel-header">
+        <span class="panel-title">Books Distributed</span>
+        <span class="total-badge" id="totalBadge">0 total</span>
+      </div>
+      <div class="col-heads">
+        <span class="col-head">Book / Bundle</span>
+        <span class="col-head c">Qty</span>
+        <span></span>
+      </div>
+      <div class="entries-list" id="entriesList"></div>
+      <button class="add-entry-btn" onclick="addEntry()">+ Add Book</button>
+    </div>
+
+  </div><!-- end scroll-body -->
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <img class="footer-logo" src="1000035749.webp" alt="ISKCON London"
+           onerror="this.style.display='none'">
+      <span class="footer-name">ISKCON London</span>
+    </div>
+    <button class="submit-btn" onclick="submitScore()">Submit</button>
+  </footer>
+
+</div><!-- end shell -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-icon" id="modalIcon"></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-msg" id="modalMsg"></div>
+    <button class="modal-close" onclick="closeModalDirect()">OK</button>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+let CONFIG = { teams: [], books: [], bundles: [], googleSheets: {} };
+
+async function loadConfig() {
+  try {
+    const r = await fetch('config.json?v=' + Date.now());
+    CONFIG = await r.json();
+  } catch(e) {
+    // Fallback defaults if config.json not found (for local dev)
+    CONFIG = {
+      teams: ["Ladies Party", "Men's Party", "Reception", "Youth Group", "Soho Street Team", "Online Sankirtan"],
+      books: ["Bhagavad Gita As It Is","Srimad Bhagavatam","Chaitanya Charitamrita","Nectar of Devotion","Nectar of Instruction","Science of Self Realization","Perfect Questions Perfect Answers","Journey of Self Discovery","Krishna Book","Higher Taste","Small Book / Booklet","Magazine / BTG"],
+      bundles: [
+        { name: "Starter Pack", books: ["Bhagavad Gita As It Is","Higher Taste","Small Book / Booklet"] },
+        { name: "Full Set", books: ["Bhagavad Gita As It Is","Nectar of Devotion","Nectar of Instruction","Science of Self Realization","Higher Taste"] }
+      ],
+      googleSheets: { scriptUrl: "" }
+    };
+  }
+  populateTeams();
+  addEntry();
+}
+
+function populateTeams() {
+  const sel = document.getElementById('teamSelect');
+  CONFIG.teams.forEach(t => {
+    const o = document.createElement('option');
+    o.value = o.textContent = t;
+    sel.appendChild(o);
+  });
+  // Guess team by time
+  const h = new Date().getHours();
+  const guess = h < 13 ? "Men's Party" : h < 18 ? "Ladies Party" : "Reception";
+  for (const o of sel.options) { if (o.value === guess) { o.selected = true; break; } }
+}
+
+// All selectable items = books + bundles
+function allItems() {
+  const items = [...CONFIG.books];
+  CONFIG.bundles.forEach(b => items.push(b.name));
+  return items;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
+  loadConfig();
+  initSpeech();
+});
+
+// ── ENTRIES ───────────────────────────────────────────────────────────────────
+let entries = [], nextId = 1;
+
+function addEntry(itemName = '', qty = 1) {
+  const items = allItems();
+  entries.push({ id: nextId++, item: itemName || items[0], qty });
+  renderEntries();
+}
+
+function removeEntry(id) {
+  entries = entries.filter(e => e.id !== id);
+  renderEntries();
+}
+
+function changeItem(id, val) {
+  const e = entries.find(e => e.id === id);
+  if (e) { e.item = val; updateTotal(); }
+}
+
+function changeQty(id, d) {
+  const e = entries.find(e => e.id === id);
+  if (e) { e.qty = Math.max(1, e.qty + d); renderEntries(); }
+}
+
+function renderEntries() {
+  const list = document.getElementById('entriesList');
+  const items = allItems();
+  list.innerHTML = '';
+  entries.forEach(e => {
+    const row = document.createElement('div');
+    row.className = 'entry-row';
+    row.innerHTML = `
+      <select onchange="changeItem(${e.id}, this.value)">
+        ${items.map(i => `<option value="${i}"${i===e.item?' selected':''}>${i}</option>`).join('')}
+      </select>
+      <div class="qty-row">
+        <button class="q-btn" onclick="changeQty(${e.id},-1)">−</button>
+        <div class="q-num">${e.qty}</div>
+        <button class="q-btn" onclick="changeQty(${e.id},+1)">+</button>
+      </div>
+      <button class="rm-btn" onclick="removeEntry(${e.id})">✕</button>`;
+    list.appendChild(row);
+  });
+  updateTotal();
+}
+
+function updateTotal() {
+  const sum = entries.reduce((a, e) => a + e.qty, 0);
+  document.getElementById('totalBadge').textContent = sum + ' total';
+}
+
+// ── SPEECH ────────────────────────────────────────────────────────────────────
+let recognition = null, isRec = false, transcript = '';
+
+function initSpeech() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById('micHint').textContent = 'Voice input requires Chrome or Edge. Add books manually below.';
+    document.getElementById('micBtn').disabled = true;
+    return;
+  }
+  recognition = new SR();
+  recognition.lang = 'en-GB';
+  recognition.interimResults = true;
+  recognition.continuous = false;
+
+  recognition.onresult = ev => {
+    let interim = '';
+    transcript = '';
+    for (let i = 0; i < ev.results.length; i++) {
+      if (ev.results[i].isFinal) transcript += ev.results[i][0].transcript;
+      else interim += ev.results[i][0].transcript;
+    }
+    document.getElementById('transcriptBox').textContent = transcript + interim;
+  };
+
+  recognition.onend = () => {
+    setRec(false);
+    if (transcript.trim()) {
+      document.getElementById('transcriptWrap').classList.add('visible');
+    }
+  };
+
+  recognition.onerror = ev => {
+    setRec(false);
+    if (ev.error !== 'no-speech') showModal('error', 'Mic Error', 'Could not access microphone: ' + ev.error);
+  };
+}
+
+function toggleRec() {
+  if (!recognition) return;
+  if (isRec) { recognition.stop(); return; }
+  transcript = '';
+  document.getElementById('transcriptBox').textContent = '';
+  document.getElementById('transcriptWrap').classList.remove('visible');
+  recognition.start();
+  setRec(true);
+}
+
+function setRec(val) {
+  isRec = val;
+  const btn = document.getElementById('micBtn');
+  const lbl = document.getElementById('micLabel');
+  if (val) {
+    btn.classList.add('recording');
+    lbl.textContent = 'Listening — tap to stop';
+  } else {
+    btn.classList.remove('recording');
+    lbl.textContent = 'Tap to Speak';
+  }
+}
+
+function discardTranscript() {
+  transcript = '';
+  document.getElementById('transcriptBox').textContent = '';
+  document.getElementById('transcriptWrap').classList.remove('visible');
+}
+
+// ── PARSER ────────────────────────────────────────────────────────────────────
+// Word-to-number map
+const WORD_NUMS = {
+  a:1, an:1, one:1, two:2, three:3, four:4, five:5, six:6, seven:7,
+  eight:8, nine:9, ten:10, eleven:11, twelve:12, thirteen:13, fourteen:14,
+  fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19, twenty:20,
+  thirty:30, forty:40, fifty:50, hundred:100
+};
+
+// Book aliases — maps spoken phrases to book/bundle names
+function buildAliasMap() {
+  const map = [];
+  const items = allItems();
+
+  // Exact and lower matches
+  items.forEach(name => {
+    map.push({ pattern: name.toLowerCase(), name });
+  });
+
+  // Manual aliases
+  const manual = [
+    { pattern: 'gita', name: 'Bhagavad Gita As It Is' },
+    { pattern: 'bhagavad gita', name: 'Bhagavad Gita As It Is' },
+    { pattern: 'bg', name: 'Bhagavad Gita As It Is' },
+    { pattern: 'bhagavatam', name: 'Srimad Bhagavatam' },
+    { pattern: 'sb', name: 'Srimad Bhagavatam' },
+    { pattern: 'cc', name: 'Chaitanya Charitamrita' },
+    { pattern: 'chaitanya', name: 'Chaitanya Charitamrita' },
+    { pattern: 'nectar of devotion', name: 'Nectar of Devotion' },
+    { pattern: 'nod', name: 'Nectar of Devotion' },
+    { pattern: 'nectar of instruction', name: 'Nectar of Instruction' },
+    { pattern: 'noi', name: 'Nectar of Instruction' },
+    { pattern: 'nectar', name: 'Nectar of Devotion' },
+    { pattern: 'science', name: 'Science of Self Realization' },
+    { pattern: 'ssr', name: 'Science of Self Realization' },
+    { pattern: 'self realization', name: 'Science of Self Realization' },
+    { pattern: 'perfect questions', name: 'Perfect Questions Perfect Answers' },
+    { pattern: 'pqpa', name: 'Perfect Questions Perfect Answers' },
+    { pattern: 'journey', name: 'Journey of Self Discovery' },
+    { pattern: 'krishna book', name: 'Krishna Book' },
+    { pattern: 'krishna', name: 'Krishna Book' },
+    { pattern: 'higher taste', name: 'Higher Taste' },
+    { pattern: 'cookbook', name: 'Higher Taste' },
+    { pattern: 'small', name: 'Small Book / Booklet' },
+    { pattern: 'small book', name: 'Small Book / Booklet' },
+    { pattern: 'booklet', name: 'Small Book / Booklet' },
+    { pattern: 'magazine', name: 'Magazine / BTG' },
+    { pattern: 'btg', name: 'Magazine / BTG' },
+    { pattern: 'back to godhead', name: 'Magazine / BTG' },
+    { pattern: 'starter pack', name: 'Starter Pack' },
+    { pattern: 'starter', name: 'Starter Pack' },
+    { pattern: 'full set', name: 'Full Set' },
+  ];
+
+  // Only add manual aliases whose target exists in items
+  manual.forEach(a => {
+    if (items.includes(a.name)) map.push(a);
+  });
+
+  // Sort by pattern length descending (match longer phrases first)
+  return map.sort((a, b) => b.pattern.length - a.pattern.length);
+}
+
+function parseNumber(str) {
+  str = str.trim().toLowerCase();
+  if (/^\d+$/.test(str)) return parseInt(str);
+  // Handle compound like "twenty five"
+  let total = 0, last = 0;
+  str.split(/\s+/).forEach(w => {
+    const n = WORD_NUMS[w];
+    if (!n) return;
+    if (n === 100) { last = (last || 1) * 100; }
+    else if (n >= 20) { total += n; last = n; }
+    else { last += n; total = Math.max(total, last); }
+  });
+  return total || null;
+}
+
+function parseTranscript() {
+  const text = transcript.trim().toLowerCase();
+  if (!text) return;
+
+  const aliases = buildAliasMap();
+  const results = []; // { name, qty }
+  let remaining = text;
+
+  // Replace "and" separators and commas
+  remaining = remaining.replace(/\band\b/g, ',').replace(/[,;]/g, ' , ');
+
+  // Tokenise into segments by comma
+  const segments = remaining.split(',').map(s => s.trim()).filter(Boolean);
+
+  segments.forEach(seg => {
+    // Try to find a number at start or end of segment
+    let qty = null;
+    let bookPart = seg;
+
+    // Number at start: "ten gitas"
+    const startNum = seg.match(/^([\w\s]+?)\s+(.+)$/);
+    // Number at end: "gitas ten" or just a segment with a book name and number anywhere
+    const numAnywhere = seg.match(/(\d+)/);
+
+    if (numAnywhere) {
+      qty = parseInt(numAnywhere[1]);
+      bookPart = seg.replace(numAnywhere[0], '').trim();
+    } else {
+      // Try word numbers at start
+      const words = seg.split(/\s+/);
+      let numWords = [];
+      let i = 0;
+      while (i < words.length && (WORD_NUMS[words[i]] !== undefined)) {
+        numWords.push(words[i]);
+        i++;
+      }
+      if (numWords.length) {
+        qty = parseNumber(numWords.join(' '));
+        bookPart = words.slice(i).join(' ');
+      } else {
+        // Try word numbers at end
+        const rev = [...words].reverse();
+        let j = 0;
+        while (j < rev.length && WORD_NUMS[rev[j]] !== undefined) {
+          numWords.unshift(rev[j]);
+          j++;
+        }
+        if (numWords.length) {
+          qty = parseNumber(numWords.join(' '));
+          bookPart = words.slice(0, words.length - j).join(' ');
+        }
+      }
+    }
+
+    if (!qty) qty = 1;
+    bookPart = bookPart.trim();
+
+    // Match bookPart to an alias
+    let matched = null;
+    for (const alias of aliases) {
+      if (bookPart.includes(alias.pattern)) {
+        matched = alias.name;
+        break;
+      }
+    }
+
+    if (matched) {
+      const existing = results.find(r => r.name === matched);
+      if (existing) existing.qty += qty;
+      else results.push({ name: matched, qty });
+    }
+  });
+
+  if (results.length === 0) {
+    showModal('error', 'Could Not Parse', 'Could not recognise any book names. Please add them manually using the button below.');
+    return;
+  }
+
+  results.forEach(r => addEntry(r.name, r.qty));
+  discardTranscript();
+
+  // Scroll to entries
+  document.getElementById('entriesList').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────────────────────
+async function submitScore() {
+  const team = document.getElementById('teamSelect').value;
+  const date = document.getElementById('dateInput').value;
+
+  if (!team) {
+    showModal('error', 'Team Required', 'Please select a team before submitting.');
+    return;
+  }
+  if (!entries.length) {
+    showModal('error', 'No Books', 'Please add at least one book entry before submitting.');
+    return;
+  }
+
+  // Build rows — one per entry (bundle stays as bundle name)
+  const rows = entries.map(e => ({
+    date, team, book: e.item, qty: e.qty,
+    submittedAt: new Date().toISOString()
+  }));
+
+  const scriptUrl = CONFIG.googleSheets?.scriptUrl;
+  if (!scriptUrl || scriptUrl === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    // Dev mode — just log
+    console.log('Submission (no script URL):', rows);
+    onSubmitSuccess(rows);
+    return;
+  }
+
+  // Disable submit button during send
+  const btn = document.querySelector('.submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    await fetch(scriptUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rows })
+    });
+    onSubmitSuccess(rows);
+  } catch(err) {
+    console.error(err);
+    showModal('error', 'Submit Failed', 'Could not reach Google Sheets. Check your connection and try again.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit';
+  }
+}
+
+function onSubmitSuccess(rows) {
+  const total = rows.reduce((a, r) => a + r.qty, 0);
+  const team  = rows[0].team;
+  showModal('success', 'Submitted', `${total} book${total!==1?'s':''} recorded for ${team}. Hare Krishna!`);
+  // Reset
+  entries = [];
+  renderEntries();
+  addEntry();
+  document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function showModal(type, title, msg) {
+  document.getElementById('modalIcon').className = 'modal-icon ' + type;
+  document.getElementById('modalIcon').textContent = type === 'success' ? '✓' : '!';
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalMsg').textContent = msg;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.classList.add('modal-open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.classList.remove('modal-open');
+}
+</script>
+</body>
+</html>
