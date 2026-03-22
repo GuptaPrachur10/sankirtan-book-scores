@@ -3,45 +3,73 @@
     "scriptUrl": "YOUR_APPS_SCRIPT_URL_HERE"
   },
   "teams": [
-    "Ladies Party",
-    "Men's Party",
-    "Reception",
-    "Youth Group",
-    "Soho Street Team",
-    "Online Sankirtan"
+    "Street Distribution",
+    "Guest Greeting Table",
+    "Reception Table",
+    "Studio 108",
+    "Govinda's restaurant",
+    "Radha's Boutique",
+    "LCVS",
+    "ELBV",
+    "MSF",
+    "Russian Speaking Society",
+    "SP Vyasasana",
+    "Vasudeva Das",
+    "Others"
   ],
   "books": [
-    "Bhagavad Gita As It Is",
-    "Srimad Bhagavatam",
-    "Chaitanya Charitamrita",
-    "Nectar of Devotion",
-    "Nectar of Instruction",
-    "Science of Self Realization",
-    "Perfect Questions Perfect Answers",
-    "Journey of Self Discovery",
-    "Krishna Book",
-    "Higher Taste",
-    "Small Book / Booklet",
-    "Magazine / BTG"
-  ],
-  "bundles": [
+  "CC Set",
+  "SB Set",
+  "Perfection of Yoga",
+  "Four Questions",
+  "Hiding in Unnatural Happiness",
+  "Easy Journey to Other Planets",
+  "Chant and Be Happy",
+  "Coming Back",
+  "Higher Taste",
+  "Nectar of Instruction",
+  "Sri Isopanisad",
+  "Lord Caitanya in Five Features",
+  "Light of the Bhagavata",
+  "Science of Self Realization",
+  "Bhagavad Gita (Small)",
+  "Bhagavad Gita (Medium)",
+  "SB 1.1",
+  "SB 2.1",
+  "SB 6.1",
+  "Krishna Book",
+  "Krishna Book (Deluxe)",
+  "Nectar of Devotion",
+  "Our Family Business",
+  "Srila Prabhupada Lilamrita",
+  "Small (Arabic)",
+  "Bhagavad Gita (Arabic)",
+  "SB 1.1 (Arabic)",
+  "Bhagavad Gita (Indian Languages)",
+  "Krishna Book (Gujarati)",
+  "Life Comes From Life (French)"
+],
+  "sets": [
     {
-      "name": "Starter Pack",
+      "name": "Maha Panca Set",
       "books": [
-        "Bhagavad Gita As It Is",
-        "Higher Taste",
-        "Small Book / Booklet"
-      ]
+        "Four Questions",
+        "Hiding in Unnatural Happiness",
+        "Bhagavad Gita (Small)", 
+        "SB 1.1",
+        "Science of Self Realization"
+  ]
     },
     {
-      "name": "Full Set",
+      "name": "Goswami Set",
       "books": [
-        "Bhagavad Gita As It Is",
-        "Nectar of Devotion",
+        "Chant and Be Happy", 
+        "Coming Back",
+        "Higher Taste",
         "Nectar of Instruction",
-        "Science of Self Realization",
-        "Higher Taste"
-      ]
+        "Perfection of Yoga",
+        "Sri Isopanisad"
+  ]
     }
   ]
 }
