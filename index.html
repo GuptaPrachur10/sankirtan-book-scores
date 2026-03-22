@@ -622,7 +622,7 @@ body.modal-open { overflow: hidden; }
         <div class="mic-dot" id="micDot"></div>
         <span id="micLabel">Tap to Speak</span>
       </button>
-      <div class="mic-hint" id="micHint">Say book names and quantities — e.g. "ten gitas, five small books"</div>
+      <div class="mic-hint" id="micHint">Say book names and quantities — e.g. "two gitas, five small books"</div>
 
       <div class="transcript-wrap" id="transcriptWrap">
         <div class="transcript-box" id="transcriptBox"></div>
@@ -693,7 +693,6 @@ async function loadConfig() {
     };
   }
   populateTeams();
-  addEntry();
 }
 
 function populateTeams() {
@@ -703,10 +702,6 @@ function populateTeams() {
     o.value = o.textContent = t;
     sel.appendChild(o);
   });
-  // Guess team by time
-  const h = new Date().getHours();
-  const guess = h < 13 ? "Men's Party" : h < 18 ? "Ladies Party" : "Reception";
-  for (const o of sel.options) { if (o.value === guess) { o.selected = true; break; } }
 }
 
 // All selectable items = books + bundles
@@ -842,62 +837,60 @@ function discardTranscript() {
 }
 
 // ── PARSER ────────────────────────────────────────────────────────────────────
-// Word-to-number map
+// Word-to-number map (Now with homophone common-sense!)
 const WORD_NUMS = {
-  a:1, an:1, one:1, two:2, three:3, four:4, five:5, six:6, seven:7,
-  eight:8, nine:9, ten:10, eleven:11, twelve:12, thirteen:13, fourteen:14,
+  a:1, an:1, one:1, 
+  two:2, to:2, too:2, 
+  three:3, 
+  four:4, for:4, 
+  five:5, six:6, seven:7,
+  eight:8, ate:8, 
+  nine:9, ten:10, eleven:11, twelve:12, thirteen:13, fourteen:14,
   fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19, twenty:20,
   thirty:30, forty:40, fifty:50, hundred:100
 };
 
-// Book aliases — maps spoken phrases to book/bundle names
+// Book aliases — maps spoken phrases to actual book names dynamically
 function buildAliasMap() {
   const map = [];
   const items = allItems();
 
-  // Exact and lower matches
+  // 1. Automatically add exact matches
   items.forEach(name => {
-    map.push({ pattern: name.toLowerCase(), name });
+    map.push({ pattern: name.toLowerCase(), name: name });
   });
 
-  // Manual aliases
+  // 2. Define flexible aliases and a 'keyword' to search for in your real list
   const manual = [
-    { pattern: 'gita', name: 'Bhagavad Gita As It Is' },
-    { pattern: 'bhagavad gita', name: 'Bhagavad Gita As It Is' },
-    { pattern: 'bg', name: 'Bhagavad Gita As It Is' },
-    { pattern: 'bhagavatam', name: 'Srimad Bhagavatam' },
-    { pattern: 'sb', name: 'Srimad Bhagavatam' },
-    { pattern: 'cc', name: 'Chaitanya Charitamrita' },
-    { pattern: 'chaitanya', name: 'Chaitanya Charitamrita' },
-    { pattern: 'nectar of devotion', name: 'Nectar of Devotion' },
-    { pattern: 'nod', name: 'Nectar of Devotion' },
-    { pattern: 'nectar of instruction', name: 'Nectar of Instruction' },
-    { pattern: 'noi', name: 'Nectar of Instruction' },
-    { pattern: 'nectar', name: 'Nectar of Devotion' },
-    { pattern: 'science', name: 'Science of Self Realization' },
-    { pattern: 'ssr', name: 'Science of Self Realization' },
-    { pattern: 'self realization', name: 'Science of Self Realization' },
-    { pattern: 'perfect questions', name: 'Perfect Questions Perfect Answers' },
-    { pattern: 'pqpa', name: 'Perfect Questions Perfect Answers' },
-    { pattern: 'journey', name: 'Journey of Self Discovery' },
-    { pattern: 'krishna book', name: 'Krishna Book' },
-    { pattern: 'krishna', name: 'Krishna Book' },
-    { pattern: 'higher taste', name: 'Higher Taste' },
-    { pattern: 'cookbook', name: 'Higher Taste' },
-    { pattern: 'small', name: 'Small Book / Booklet' },
-    { pattern: 'small book', name: 'Small Book / Booklet' },
-    { pattern: 'booklet', name: 'Small Book / Booklet' },
-    { pattern: 'magazine', name: 'Magazine / BTG' },
-    { pattern: 'btg', name: 'Magazine / BTG' },
-    { pattern: 'back to godhead', name: 'Magazine / BTG' },
-    { pattern: 'starter pack', name: 'Starter Pack' },
-    { pattern: 'starter', name: 'Starter Pack' },
-    { pattern: 'full set', name: 'Full Set' },
+    { pattern: 'gita', searchFor: 'gita' },
+    { pattern: 'bg', searchFor: 'gita' },
+    { pattern: 'bhagavatam', searchFor: 'bhagavatam' },
+    { pattern: 'sb', searchFor: 'bhagavatam' },
+    { pattern: 'cc', searchFor: 'chaitanya' },
+    { pattern: 'chaitanya', searchFor: 'chaitanya' },
+    { pattern: 'nod', searchFor: 'nectar of devotion' },
+    { pattern: 'noi', searchFor: 'nectar of instruction' },
+    { pattern: 'ssr', searchFor: 'science' },
+    { pattern: 'science', searchFor: 'science' },
+    { pattern: 'pqpa', searchFor: 'perfect' },
+    { pattern: 'journey', searchFor: 'journey' },
+    { pattern: 'krishna', searchFor: 'krishna' },
+    { pattern: 'cookbook', searchFor: 'higher taste' },
+    { pattern: 'higher taste', searchFor: 'higher taste' },
+    { pattern: 'small', searchFor: 'small' },
+    { pattern: 'booklet', searchFor: 'small' },
+    { pattern: 'magazine', searchFor: 'magazine' },
+    { pattern: 'btg', searchFor: 'magazine' },
+    { pattern: 'starter', searchFor: 'starter' },
+    { pattern: 'full set', searchFor: 'full' }
   ];
 
-  // Only add manual aliases whose target exists in items
-  manual.forEach(a => {
-    if (items.includes(a.name)) map.push(a);
+  // 3. Smart Linker: Find the actual book name even if the exact spelling changed!
+  manual.forEach(alias => {
+    const realBookName = items.find(item => item.toLowerCase().includes(alias.searchFor));
+    if (realBookName) {
+      map.push({ pattern: alias.pattern, name: realBookName });
+    }
   });
 
   // Sort by pattern length descending (match longer phrases first)
@@ -1032,11 +1025,6 @@ async function submitScore() {
     return;
   }
 
-  // Disable submit button during send
-  const btn = document.querySelector('.submit-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>';
-
   // 1. Show the loading spinner just for a split second so it feels active
   const btn = document.querySelector('.submit-btn');
   btn.disabled = true;
@@ -1055,17 +1043,16 @@ async function submitScore() {
     onSubmitSuccess(rows);
     btn.disabled = false;
     btn.textContent = 'Submit';
-  }, 300); // 300ms delay just to make the button click feel satisfying
+  }, 300); 
 }
 
 function onSubmitSuccess(rows) {
   const total = rows.reduce((a, r) => a + r.qty, 0);
   const team  = rows[0].team;
   showModal('success', 'Submitted', `${total} book${total!==1?'s':''} recorded for ${team}. Hare Krishna!`);
-  // Reset
+  // Reset completely blank
   entries = [];
   renderEntries();
-  addEntry();
   document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
 }
 
