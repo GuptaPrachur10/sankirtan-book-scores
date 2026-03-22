@@ -1037,21 +1037,25 @@ async function submitScore() {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>';
 
-  try {
-    await fetch(scriptUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ rows })
-    });
+  // 1. Show the loading spinner just for a split second so it feels active
+  const btn = document.querySelector('.submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  // 2. Fire the request in the background (Notice we removed 'await')
+  fetch(scriptUrl, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rows })
+  }).catch(err => console.error("Background sync error:", err));
+
+  // 3. Instantly show the success modal and reset the UI!
+  setTimeout(() => {
     onSubmitSuccess(rows);
-  } catch(err) {
-    console.error(err);
-    showModal('error', 'Submit Failed', 'Could not reach Google Sheets. Check your connection and try again.');
-  } finally {
     btn.disabled = false;
     btn.textContent = 'Submit';
-  }
+  }, 300); // 300ms delay just to make the button click feel satisfying
 }
 
 function onSubmitSuccess(rows) {
