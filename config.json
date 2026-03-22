@@ -1,0 +1,47 @@
+{
+  "googleSheets": {
+    "scriptUrl": "YOUR_APPS_SCRIPT_URL_HERE"
+  },
+  "teams": [
+    "Ladies Party",
+    "Men's Party",
+    "Reception",
+    "Youth Group",
+    "Soho Street Team",
+    "Online Sankirtan"
+  ],
+  "books": [
+    "Bhagavad Gita As It Is",
+    "Srimad Bhagavatam",
+    "Chaitanya Charitamrita",
+    "Nectar of Devotion",
+    "Nectar of Instruction",
+    "Science of Self Realization",
+    "Perfect Questions Perfect Answers",
+    "Journey of Self Discovery",
+    "Krishna Book",
+    "Higher Taste",
+    "Small Book / Booklet",
+    "Magazine / BTG"
+  ],
+  "bundles": [
+    {
+      "name": "Starter Pack",
+      "books": [
+        "Bhagavad Gita As It Is",
+        "Higher Taste",
+        "Small Book / Booklet"
+      ]
+    },
+    {
+      "name": "Full Set",
+      "books": [
+        "Bhagavad Gita As It Is",
+        "Nectar of Devotion",
+        "Nectar of Instruction",
+        "Science of Self Realization",
+        "Higher Taste"
+      ]
+    }
+  ]
+}
