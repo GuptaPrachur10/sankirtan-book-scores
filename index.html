@@ -632,6 +632,33 @@ footer {
   margin-right: 4px;
 }
 
+.top-bar {
+  flex-shrink: 0;
+  background: var(--navy-mid);
+  padding: 15px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centers the content */
+  gap: 12px;
+  border-bottom: 1px solid rgba(240,180,41,0.1);
+}
+
+.top-logo {
+  width: 50px; /* Slightly larger for the main header */
+  height: auto;
+  filter: drop-shadow(0 0 8px rgba(240,180,41,0.3));
+}
+
+.top-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px; /* Large, readable title */
+  letter-spacing: 1.5px;
+  color: var(--gold);
+  margin: 0;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* Prevent body scroll on iOS when modal open */
@@ -641,7 +668,10 @@ body.modal-open { overflow: hidden; }
 <body>
 
 <div class="shell">
-
+  <div class="top-bar">
+    <img src="1000035749.webp" alt="Logo" class="top-logo">
+    <h1 class="top-title">Book Scores Submission Form</h1>
+  </div>
   <!-- HEADER -->
   <header>
     <img class="hdr-logo" src="1000035749.webp" alt="ISKCON London" onerror="this.style.display='none'">
