@@ -922,15 +922,21 @@ function discardTranscript() {
 // ── PARSER ────────────────────────────────────────────────────────────────────
 // Word-to-number map (Now with homophone common-sense!)
 const WORD_NUMS = {
-  a:1, an:1, one:1, 
-  two:2, to:2, too:2, 
-  three:3, 
-  four:4, for:4, 
-  five:5, six:6, seven:7,
-  eight:8, ate:8, 
-  nine:9, ten:10, eleven:11, twelve:12, thirteen:13, fourteen:14,
-  fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19, twenty:20,
-  thirty:30, forty:40, fifty:50, hundred:100
+  a:1, an:1, one:1, won:1,
+  two:2, to:2, too:2,
+  three:3, tree:3, free:3,
+  four:4, for:4,
+  five:5,
+  six:6, sex:6,
+  seven:7,
+  eight:8, ate:8,
+  nine:9,
+  ten:10,
+  eleven:11,
+  twelve:12,
+  thirteen:13, fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19,
+  twenty:20, thirty:30, forty:40, fifty:50,
+  hundred:100
 };
 
 // Book aliases — maps spoken phrases to actual book names dynamically
@@ -944,29 +950,80 @@ function buildAliasMap() {
   });
 
   // 2. Define flexible aliases and a 'keyword' to search for in your real list
-  const manual = [
-    { pattern: 'gita', searchFor: 'gita' },
-    { pattern: 'bg', searchFor: 'gita' },
-    { pattern: 'bhagavatam', searchFor: 'bhagavatam' },
-    { pattern: 'sb', searchFor: 'bhagavatam' },
-    { pattern: 'cc', searchFor: 'chaitanya' },
-    { pattern: 'chaitanya', searchFor: 'chaitanya' },
-    { pattern: 'nod', searchFor: 'nectar of devotion' },
-    { pattern: 'noi', searchFor: 'nectar of instruction' },
-    { pattern: 'ssr', searchFor: 'science' },
-    { pattern: 'science', searchFor: 'science' },
-    { pattern: 'pqpa', searchFor: 'perfect' },
-    { pattern: 'journey', searchFor: 'journey' },
-    { pattern: 'krishna', searchFor: 'krishna' },
-    { pattern: 'cookbook', searchFor: 'higher taste' },
-    { pattern: 'higher taste', searchFor: 'higher taste' },
-    { pattern: 'small', searchFor: 'small' },
-    { pattern: 'booklet', searchFor: 'small' },
-    { pattern: 'magazine', searchFor: 'magazine' },
-    { pattern: 'btg', searchFor: 'magazine' },
-    { pattern: 'starter', searchFor: 'starter' },
-    { pattern: 'full set', searchFor: 'full' }
-  ];
+// Inside your buildAliasMap() function, replace the `const manual = [...]` with:
+
+const manual = [
+  // Sets & Bundles
+  { pattern: 'maha pancha', searchFor: 'Maha Pancha Set' },
+  { pattern: 'pancha set', searchFor: 'Maha Pancha Set' },
+  { pattern: 'pancha', searchFor: 'Maha Pancha Set' },
+  { pattern: 'maha', searchFor: 'Maha Pancha Set' },
+  { pattern: 'goswami', searchFor: 'Goswami Set' },
+  { pattern: 'sb set', searchFor: 'SB Set' },
+  { pattern: 'bhagavatam set', searchFor: 'SB Set' },
+  { pattern: 'cc set', searchFor: 'CC Set' },
+  { pattern: 'chaitanya set', searchFor: 'CC Set' },
+  { pattern: 'c c set', searchFor: 'CC Set' },
+
+  // Gitas (Crucial to distinguish small vs medium)
+  { pattern: 'small gita', searchFor: 'Bhagavad Gita (Small)' },
+  { pattern: 'medium gita', searchFor: 'Bhagavad Gita (Medium)' },
+  { pattern: 'big gita', searchFor: 'Bhagavad Gita (Medium)' }, // fallback if they say big
+  { pattern: 'bg', searchFor: 'Bhagavad Gita (Small)' }, 
+  { pattern: 'gita', searchFor: 'Bhagavad Gita (Small)' },
+  { pattern: 'geeta', searchFor: 'Bhagavad Gita (Small)' },
+
+  // Srimad Bhagavatam individual cantos
+  { pattern: 'canto one', searchFor: 'SB 1.1' },
+  { pattern: 'canto 1', searchFor: 'SB 1.1' },
+  { pattern: 'canto two', searchFor: 'SB 2.1' },
+  { pattern: 'canto 2', searchFor: 'SB 2.1' },
+  { pattern: 'canto six', searchFor: 'SB 6.1' },
+  { pattern: 'canto 6', searchFor: 'SB 6.1' },
+  { pattern: 'sb one', searchFor: 'SB 1.1' },
+  { pattern: 'sb two', searchFor: 'SB 2.1' },
+  { pattern: 'sb six', searchFor: 'SB 6.1' },
+
+  // Krishna Books
+  { pattern: 'deluxe krishna', searchFor: 'Krishna Book (Deluxe)' },
+  { pattern: 'big krishna', searchFor: 'Krishna Book (Deluxe)' },
+  { pattern: 'krishna book', searchFor: 'Krishna Book' },
+
+  // Small/Medium Books (Abbreviations & Nicknames)
+  { pattern: 'ssr', searchFor: 'Science of Self Realization' },
+  { pattern: 'science of self', searchFor: 'Science of Self Realization' },
+  { pattern: 'nod', searchFor: 'Nectar of Devotion' },
+  { pattern: 'noi', searchFor: 'Nectar of Instruction' },
+  { pattern: 'instruction', searchFor: 'Nectar of Instruction' },
+  { pattern: 'devotion', searchFor: 'Nectar of Devotion' },
+  { pattern: 'iso', searchFor: 'Sri Isopanisad' },
+  { pattern: 'isopanisad', searchFor: 'Sri Isopanisad' },
+  { pattern: 'perfection', searchFor: 'Perfection of Yoga' },
+  { pattern: 'yoga book', searchFor: 'Perfection of Yoga' },
+  { pattern: 'hiding', searchFor: 'Hiding in Unnatural Happiness' },
+  { pattern: 'unnatural happiness', searchFor: 'Hiding in Unnatural Happiness' },
+  { pattern: 'easy journey', searchFor: 'Easy Journey to Other Planets' },
+  { pattern: 'planets', searchFor: 'Easy Journey to Other Planets' },
+  { pattern: 'chant', searchFor: 'Chant and Be Happy' },
+  { pattern: 'coming back', searchFor: 'Coming Back' },
+  { pattern: 'cookbook', searchFor: 'Higher Taste' },
+  { pattern: 'higher taste', searchFor: 'Higher Taste' },
+  { pattern: 'four questions', searchFor: 'Four Questions' },
+  { pattern: '4 questions', searchFor: 'Four Questions' },
+  { pattern: 'five features', searchFor: 'Lord Caitanya in Five Features' },
+  { pattern: 'light of', searchFor: 'Light of the Bhagavata' },
+  { pattern: 'family business', searchFor: 'Our Family Business' },
+  { pattern: 'lilamrita', searchFor: 'Srila Prabhupada Lilamrita' },
+  { pattern: 'spl', searchFor: 'Srila Prabhupada Lilamrita' },
+
+  // Foreign Languages
+  { pattern: 'arabic gita', searchFor: 'Bhagavad Gita (Arabic)' },
+  { pattern: 'arabic small', searchFor: 'Small (Arabic)' },
+  { pattern: 'arabic sb', searchFor: 'SB 1.1 (Arabic)' },
+  { pattern: 'indian gita', searchFor: 'Bhagavad Gita (Indian Languages)' },
+  { pattern: 'gujarati krishna', searchFor: 'Krishna Book (Gujarati)' },
+  { pattern: 'french life', searchFor: 'Life Comes From Life (French)' }
+];
 
   // 3. Smart Linker: Find the actual book name even if the exact spelling changed!
   manual.forEach(alias => {
