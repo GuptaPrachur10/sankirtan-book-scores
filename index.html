@@ -950,190 +950,154 @@ function buildAliasMap() {
   });
 
   // 2. Define flexible aliases and a 'keyword' to search for in your real list
-// Inside your buildAliasMap() function, replace the `const manual = [...]` with:
+  const manual = [
+    // Sets & Bundles
+    { pattern: 'maha pancha', searchFor: 'Maha Pancha Set' },
+    { pattern: 'pancha set', searchFor: 'Maha Pancha Set' },
+    { pattern: 'pancha', searchFor: 'Maha Pancha Set' },
+    { pattern: 'maha', searchFor: 'Maha Pancha Set' },
+    { pattern: 'goswami', searchFor: 'Goswami Set' },
+    { pattern: 'sb set', searchFor: 'SB Set' },
+    { pattern: 'bhagavatam set', searchFor: 'SB Set' },
+    { pattern: 'cc set', searchFor: 'CC Set' },
+    { pattern: 'chaitanya set', searchFor: 'CC Set' },
+    { pattern: 'c c set', searchFor: 'CC Set' },
 
-const manual = [
-  // Sets & Bundles
-  { pattern: 'maha pancha', searchFor: 'Maha Pancha Set' },
-  { pattern: 'pancha set', searchFor: 'Maha Pancha Set' },
-  { pattern: 'pancha', searchFor: 'Maha Pancha Set' },
-  { pattern: 'maha', searchFor: 'Maha Pancha Set' },
-  { pattern: 'goswami', searchFor: 'Goswami Set' },
-  { pattern: 'sb set', searchFor: 'SB Set' },
-  { pattern: 'bhagavatam set', searchFor: 'SB Set' },
-  { pattern: 'cc set', searchFor: 'CC Set' },
-  { pattern: 'chaitanya set', searchFor: 'CC Set' },
-  { pattern: 'c c set', searchFor: 'CC Set' },
+    // Gitas (Crucial to distinguish small vs medium)
+    { pattern: 'small gita', searchFor: 'Bhagavad Gita (Small)' },
+    { pattern: 'medium gita', searchFor: 'Bhagavad Gita (Medium)' },
+    { pattern: 'big gita', searchFor: 'Bhagavad Gita (Medium)' }, 
+    { pattern: 'bg', searchFor: 'Bhagavad Gita (Small)' }, 
+    { pattern: 'gita', searchFor: 'Bhagavad Gita (Small)' },
+    { pattern: 'geeta', searchFor: 'Bhagavad Gita (Small)' },
 
-  // Gitas (Crucial to distinguish small vs medium)
-  { pattern: 'small gita', searchFor: 'Bhagavad Gita (Small)' },
-  { pattern: 'medium gita', searchFor: 'Bhagavad Gita (Medium)' },
-  { pattern: 'big gita', searchFor: 'Bhagavad Gita (Medium)' }, // fallback if they say big
-  { pattern: 'bg', searchFor: 'Bhagavad Gita (Small)' }, 
-  { pattern: 'gita', searchFor: 'Bhagavad Gita (Small)' },
-  { pattern: 'geeta', searchFor: 'Bhagavad Gita (Small)' },
+    // Srimad Bhagavatam individual cantos
+    { pattern: 'canto one', searchFor: 'SB 1.1' },
+    { pattern: 'canto 1', searchFor: 'SB 1.1' },
+    { pattern: 'canto two', searchFor: 'SB 2.1' },
+    { pattern: 'canto 2', searchFor: 'SB 2.1' },
+    { pattern: 'canto six', searchFor: 'SB 6.1' },
+    { pattern: 'canto 6', searchFor: 'SB 6.1' },
+    { pattern: 'sb one', searchFor: 'SB 1.1' },
+    { pattern: 'sb two', searchFor: 'SB 2.1' },
+    { pattern: 'sb six', searchFor: 'SB 6.1' },
 
-  // Srimad Bhagavatam individual cantos
-  { pattern: 'canto one', searchFor: 'SB 1.1' },
-  { pattern: 'canto 1', searchFor: 'SB 1.1' },
-  { pattern: 'canto two', searchFor: 'SB 2.1' },
-  { pattern: 'canto 2', searchFor: 'SB 2.1' },
-  { pattern: 'canto six', searchFor: 'SB 6.1' },
-  { pattern: 'canto 6', searchFor: 'SB 6.1' },
-  { pattern: 'sb one', searchFor: 'SB 1.1' },
-  { pattern: 'sb two', searchFor: 'SB 2.1' },
-  { pattern: 'sb six', searchFor: 'SB 6.1' },
+    // Krishna Books
+    { pattern: 'deluxe krishna', searchFor: 'Krishna Book (Deluxe)' },
+    { pattern: 'big krishna', searchFor: 'Krishna Book (Deluxe)' },
+    { pattern: 'krishna book', searchFor: 'Krishna Book' },
 
-  // Krishna Books
-  { pattern: 'deluxe krishna', searchFor: 'Krishna Book (Deluxe)' },
-  { pattern: 'big krishna', searchFor: 'Krishna Book (Deluxe)' },
-  { pattern: 'krishna book', searchFor: 'Krishna Book' },
+    // Small/Medium Books (Abbreviations & Nicknames)
+    { pattern: 'ssr', searchFor: 'Science of Self Realization' },
+    { pattern: 'science of self', searchFor: 'Science of Self Realization' },
+    { pattern: 'nod', searchFor: 'Nectar of Devotion' },
+    { pattern: 'noi', searchFor: 'Nectar of Instruction' },
+    { pattern: 'instruction', searchFor: 'Nectar of Instruction' },
+    { pattern: 'devotion', searchFor: 'Nectar of Devotion' },
+    { pattern: 'iso', searchFor: 'Sri Isopanisad' },
+    { pattern: 'isopanisad', searchFor: 'Sri Isopanisad' },
+    { pattern: 'perfection', searchFor: 'Perfection of Yoga' },
+    { pattern: 'yoga book', searchFor: 'Perfection of Yoga' },
+    { pattern: 'hiding', searchFor: 'Hiding in Unnatural Happiness' },
+    { pattern: 'unnatural happiness', searchFor: 'Hiding in Unnatural Happiness' },
+    { pattern: 'easy journey', searchFor: 'Easy Journey to Other Planets' },
+    { pattern: 'planets', searchFor: 'Easy Journey to Other Planets' },
+    { pattern: 'chant', searchFor: 'Chant and Be Happy' },
+    { pattern: 'coming back', searchFor: 'Coming Back' },
+    { pattern: 'cookbook', searchFor: 'Higher Taste' },
+    { pattern: 'higher taste', searchFor: 'Higher Taste' },
+    { pattern: 'four questions', searchFor: 'Four Questions' },
+    { pattern: '4 questions', searchFor: 'Four Questions' },
+    { pattern: 'five features', searchFor: 'Lord Caitanya in Five Features' },
+    { pattern: 'light of', searchFor: 'Light of the Bhagavata' },
+    { pattern: 'family business', searchFor: 'Our Family Business' },
+    { pattern: 'lilamrita', searchFor: 'Srila Prabhupada Lilamrita' },
+    { pattern: 'spl', searchFor: 'Srila Prabhupada Lilamrita' },
 
-  // Small/Medium Books (Abbreviations & Nicknames)
-  { pattern: 'ssr', searchFor: 'Science of Self Realization' },
-  { pattern: 'science of self', searchFor: 'Science of Self Realization' },
-  { pattern: 'nod', searchFor: 'Nectar of Devotion' },
-  { pattern: 'noi', searchFor: 'Nectar of Instruction' },
-  { pattern: 'instruction', searchFor: 'Nectar of Instruction' },
-  { pattern: 'devotion', searchFor: 'Nectar of Devotion' },
-  { pattern: 'iso', searchFor: 'Sri Isopanisad' },
-  { pattern: 'isopanisad', searchFor: 'Sri Isopanisad' },
-  { pattern: 'perfection', searchFor: 'Perfection of Yoga' },
-  { pattern: 'yoga book', searchFor: 'Perfection of Yoga' },
-  { pattern: 'hiding', searchFor: 'Hiding in Unnatural Happiness' },
-  { pattern: 'unnatural happiness', searchFor: 'Hiding in Unnatural Happiness' },
-  { pattern: 'easy journey', searchFor: 'Easy Journey to Other Planets' },
-  { pattern: 'planets', searchFor: 'Easy Journey to Other Planets' },
-  { pattern: 'chant', searchFor: 'Chant and Be Happy' },
-  { pattern: 'coming back', searchFor: 'Coming Back' },
-  { pattern: 'cookbook', searchFor: 'Higher Taste' },
-  { pattern: 'higher taste', searchFor: 'Higher Taste' },
-  { pattern: 'four questions', searchFor: 'Four Questions' },
-  { pattern: '4 questions', searchFor: 'Four Questions' },
-  { pattern: 'five features', searchFor: 'Lord Caitanya in Five Features' },
-  { pattern: 'light of', searchFor: 'Light of the Bhagavata' },
-  { pattern: 'family business', searchFor: 'Our Family Business' },
-  { pattern: 'lilamrita', searchFor: 'Srila Prabhupada Lilamrita' },
-  { pattern: 'spl', searchFor: 'Srila Prabhupada Lilamrita' },
+    // Foreign Languages
+    { pattern: 'arabic gita', searchFor: 'Bhagavad Gita (Arabic)' },
+    { pattern: 'arabic small', searchFor: 'Small (Arabic)' },
+    { pattern: 'arabic sb', searchFor: 'SB 1.1 (Arabic)' },
+    { pattern: 'indian gita', searchFor: 'Bhagavad Gita (Indian Languages)' },
+    { pattern: 'gujarati krishna', searchFor: 'Krishna Book (Gujarati)' },
+    { pattern: 'french life', searchFor: 'Life Comes From Life (French)' }
+  ];
 
-  // Foreign Languages
-  { pattern: 'arabic gita', searchFor: 'Bhagavad Gita (Arabic)' },
-  { pattern: 'arabic small', searchFor: 'Small (Arabic)' },
-  { pattern: 'arabic sb', searchFor: 'SB 1.1 (Arabic)' },
-  { pattern: 'indian gita', searchFor: 'Bhagavad Gita (Indian Languages)' },
-  { pattern: 'gujarati krishna', searchFor: 'Krishna Book (Gujarati)' },
-  { pattern: 'french life', searchFor: 'Life Comes From Life (French)' }
-];
-
-  // 3. Smart Linker: Find the actual book name even if the exact spelling changed!
+  // 3. Smart Linker: Find the actual book name (Fixed Case-Sensitivity Bug)
   manual.forEach(alias => {
-    const realBookName = items.find(item => item.toLowerCase().includes(alias.searchFor));
+    const realBookName = items.find(item => item.toLowerCase().includes(alias.searchFor.toLowerCase()));
     if (realBookName) {
       map.push({ pattern: alias.pattern, name: realBookName });
     }
   });
 
-  // Sort by pattern length descending (match longer phrases first)
-  return map.sort((a, b) => b.pattern.length - a.pattern.length);
-}
-
-function parseNumber(str) {
-  str = str.trim().toLowerCase();
-  if (/^\d+$/.test(str)) return parseInt(str);
-  // Handle compound like "twenty five"
-  let total = 0, last = 0;
-  str.split(/\s+/).forEach(w => {
-    const n = WORD_NUMS[w];
-    if (!n) return;
-    if (n === 100) { last = (last || 1) * 100; }
-    else if (n >= 20) { total += n; last = n; }
-    else { last += n; total = Math.max(total, last); }
-  });
-  return total || null;
+  return map;
 }
 
 function parseTranscript() {
-  const text = transcript.trim().toLowerCase();
+  let text = transcript.trim().toLowerCase();
   if (!text) return;
 
-  const aliases = buildAliasMap();
-  const results = []; // { name, qty }
-  let remaining = text;
+  // Clean up filler words
+  text = text.replace(/\b(and|add|put)\b/g, ' ');
 
-  // Replace "and" separators and commas
-  remaining = remaining.replace(/\band\b/g, ',').replace(/[,;]/g, ' , ');
+  const aliasesMap = buildAliasMap();
+  
+  // Sort aliases by length (longest first) to prevent partial matches
+  const sortedPatterns = aliasesMap
+    .map(alias => alias.pattern.toLowerCase())
+    .sort((a, b) => b.length - a.length)
+    .join('|');
 
-  // Tokenise into segments by comma
-  const segments = remaining.split(',').map(s => s.trim()).filter(Boolean);
+  const numWords = Object.keys(WORD_NUMS).join('|');
 
-  segments.forEach(seg => {
-    // Try to find a number at start or end of segment
-    let qty = null;
-    let bookPart = seg;
+  // Regex: Optional number (digit or word) followed by spaces, then the book alias
+  const regex = new RegExp(`(?:\\b(\\d+|${numWords})\\b\\s+)?\\b(${sortedPatterns})\\b`, 'gi');
+  
+  let match;
+  const results = [];
+  let foundAny = false;
 
-    // Number at start: "ten gitas"
-    const startNum = seg.match(/^([\w\s]+?)\s+(.+)$/);
-    // Number at end: "gitas ten" or just a segment with a book name and number anywhere
-    const numAnywhere = seg.match(/(\d+)/);
-
-    if (numAnywhere) {
-      qty = parseInt(numAnywhere[1]);
-      bookPart = seg.replace(numAnywhere[0], '').trim();
-    } else {
-      // Try word numbers at start
-      const words = seg.split(/\s+/);
-      let numWords = [];
-      let i = 0;
-      while (i < words.length && (WORD_NUMS[words[i]] !== undefined)) {
-        numWords.push(words[i]);
-        i++;
+  // Loop through continuous speech and pull out all matches
+  while ((match = regex.exec(text)) !== null) {
+    foundAny = true;
+    let qtyStr = match[1];
+    let bookPattern = match[2].toLowerCase();
+    
+    let quantity = 1; 
+    
+    if (qtyStr) {
+      if (!isNaN(parseInt(qtyStr))) {
+        quantity = parseInt(qtyStr);
+      } else if (WORD_NUMS[qtyStr.toLowerCase()]) {
+        quantity = WORD_NUMS[qtyStr.toLowerCase()];
       }
-      if (numWords.length) {
-        qty = parseNumber(numWords.join(' '));
-        bookPart = words.slice(i).join(' ');
+    }
+    
+    // Match back to the official book name
+    const matchedAlias = aliasesMap.find(m => m.pattern.toLowerCase() === bookPattern);
+    
+    if (matchedAlias) {
+      // Group quantities if the same book is mentioned twice in one sentence
+      const existing = results.find(r => r.name === matchedAlias.name);
+      if (existing) {
+        existing.qty += quantity;
       } else {
-        // Try word numbers at end
-        const rev = [...words].reverse();
-        let j = 0;
-        while (j < rev.length && WORD_NUMS[rev[j]] !== undefined) {
-          numWords.unshift(rev[j]);
-          j++;
-        }
-        if (numWords.length) {
-          qty = parseNumber(numWords.join(' '));
-          bookPart = words.slice(0, words.length - j).join(' ');
-        }
+        results.push({ name: matchedAlias.name, qty: quantity });
       }
     }
+  }
 
-    if (!qty) qty = 1;
-    bookPart = bookPart.trim();
-
-    // Match bookPart to an alias
-    let matched = null;
-    for (const alias of aliases) {
-      if (bookPart.includes(alias.pattern)) {
-        matched = alias.name;
-        break;
-      }
-    }
-
-    if (matched) {
-      const existing = results.find(r => r.name === matched);
-      if (existing) existing.qty += qty;
-      else results.push({ name: matched, qty });
-    }
-  });
-
-  if (results.length === 0) {
-    showModal('error', 'Could Not Parse', 'Could not recognise any book names. Please add them manually using the button below.');
+  if (!foundAny) {
+    showModal('error', 'Could Not Parse', 'Could not recognise any exact book names. Please try again or add manually.');
     return;
   }
 
+  // Add them to the UI list
   results.forEach(r => addEntry(r.name, r.qty));
   discardTranscript();
 
-  // Scroll to entries
+  // Scroll smoothly down to the updated list
   document.getElementById('entriesList').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
