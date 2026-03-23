@@ -634,23 +634,51 @@ footer {
 
 .top-bar {
   flex-shrink: 0;
-  background: var(--navy-mid);
-  padding: 12px 14px;
+  background: linear-gradient(180deg, var(--navy-mid) 0%, var(--navy) 100%);
+  padding: 25px 15px 15px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 15px;
-  border-bottom: 2px solid var(--gold-dim); /* Thicker line to separate from Team/Date */
 }
 
-.top-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 22px; 
-  letter-spacing: 1px;
-  color: var(--white); /* White text often looks cleaner with a busy logo */
-  margin: 0;
-  line-height: 1.1;
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.header-pre {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--muted);
+  line-height: 1;
+}
+
+.header-main {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 34px; /* Big and impactful */
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: 1px;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.gold-text {
+  color: var(--gold);
+}
+
+.header-line {
+  width: 40px;
+  height: 3px;
+  background: var(--gold);
+  margin-top: 10px;
+  border-radius: 2px;
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -663,7 +691,11 @@ body.modal-open { overflow: hidden; }
 
 <div class="shell">
   <div class="top-bar">
-    <h1 class="top-title">Book Scores Submission Form</h1>
+    <div class="header-content">
+      <span class="header-pre">Sankirtan Department</span>
+      <h1 class="header-main">Book Scores <span class="gold-text">Submission Form</span></h1>
+      <div class="header-line"></div>
+    </div>
   </div>
   <!-- HEADER -->
   <header>
