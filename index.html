@@ -480,13 +480,20 @@ footer {
 .footer-brand {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 12px;
   flex: 1;
   min-width: 0;
 }
 
+.footer-credits {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
 .footer-logo {
-  width: 42px;
+  width: 42px; /* Slightly larger for presence */
   height: 42px;
   object-fit: contain;
   flex-shrink: 0;
@@ -495,13 +502,22 @@ footer {
 
 .footer-name {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 17px;
-  letter-spacing: 2.5px;
+  font-size: 18px;
+  letter-spacing: 2px;
   line-height: 1;
   color: var(--white);
+  margin-bottom: 2px;
+}
+
+.footer-tagline {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gold-dim); /* Gold color for the official credit */
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  opacity: 0.9;
 }
 
 .submit-btn {
