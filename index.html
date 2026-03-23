@@ -1163,8 +1163,8 @@ function parseTranscript() {
 
   const numWords = Object.keys(WORD_NUMS).join('|');
 
-  // Regex: Optional number (digit or word) followed by spaces, then the book alias
-  const regex = new RegExp(`(?:\\b(\\d+|${numWords})\\b\\s+)?\\b(${sortedPatterns})\\b`, 'gi');
+  // 🔥 THE FIX: Added (?:s|es)? right after the pattern to catch plurals automatically!
+  const regex = new RegExp(`(?:\\b(\\d+|${numWords})\\b\\s+)?\\b(${sortedPatterns})(?:s|es)?\\b`, 'gi');
   
   let match;
   const results = [];
@@ -1174,7 +1174,7 @@ function parseTranscript() {
   while ((match = regex.exec(text)) !== null) {
     foundAny = true;
     let qtyStr = match[1];
-    let bookPattern = match[2].toLowerCase();
+    let bookPattern = match[2].toLowerCase(); // Plurals are stripped out by the Regex grouping
     
     let quantity = 1; 
     
