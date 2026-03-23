@@ -951,76 +951,182 @@ function buildAliasMap() {
 
   // 2. Define flexible aliases and a 'keyword' to search for in your real list
   const manual = [
-    // Sets & Bundles
+    // ── SETS & BUNDLES ──
     { pattern: 'maha pancha', searchFor: 'Maha Pancha Set' },
+    { pattern: 'maha punch', searchFor: 'Maha Pancha Set' }, // STT error
+    { pattern: 'maha panch', searchFor: 'Maha Pancha Set' },
     { pattern: 'pancha set', searchFor: 'Maha Pancha Set' },
-    { pattern: 'pancha', searchFor: 'Maha Pancha Set' },
-    { pattern: 'maha', searchFor: 'Maha Pancha Set' },
+    { pattern: 'punch a set', searchFor: 'Maha Pancha Set' }, // STT error
+    { pattern: 'maha set', searchFor: 'Maha Pancha Set' },
     { pattern: 'goswami', searchFor: 'Goswami Set' },
+    { pattern: 'gosvami', searchFor: 'Goswami Set' },
+    { pattern: 'go swami', searchFor: 'Goswami Set' },
+    { pattern: 'go svami', searchFor: 'Goswami Set' },
+    
+    // SB Sets
     { pattern: 'sb set', searchFor: 'SB Set' },
+    { pattern: 's b set', searchFor: 'SB Set' },
+    { pattern: 'es bee set', searchFor: 'SB Set' }, // Phonetic literal
     { pattern: 'bhagavatam set', searchFor: 'SB Set' },
+    { pattern: 'bhagawatam set', searchFor: 'SB Set' }, // W instead of V
+    { pattern: 'bhagvatam set', searchFor: 'SB Set' }, // Missing 'a'
+    { pattern: 'bhagwatam set', searchFor: 'SB Set' }, 
+    { pattern: 'bagavatam set', searchFor: 'SB Set' }, // Missing 'h'
+    { pattern: 'srimad bhagavatam set', searchFor: 'SB Set' },
+    { pattern: 'shrimad bhagavatam set', searchFor: 'SB Set' },
+    
+    // CC Sets
     { pattern: 'cc set', searchFor: 'CC Set' },
-    { pattern: 'chaitanya set', searchFor: 'CC Set' },
     { pattern: 'c c set', searchFor: 'CC Set' },
+    { pattern: 'see see set', searchFor: 'CC Set' }, // Phonetic literal
+    { pattern: 'chaitanya set', searchFor: 'CC Set' },
+    { pattern: 'caitanya set', searchFor: 'CC Set' },
 
-    // Gitas (Crucial to distinguish small vs medium)
+    // ── GITAS (Medium vs Small is crucial) ──
     { pattern: 'small gita', searchFor: 'Bhagavad Gita (Small)' },
+    { pattern: 'small geeta', searchFor: 'Bhagavad Gita (Small)' }, 
     { pattern: 'medium gita', searchFor: 'Bhagavad Gita (Medium)' },
+    { pattern: 'medium geeta', searchFor: 'Bhagavad Gita (Medium)' },
     { pattern: 'big gita', searchFor: 'Bhagavad Gita (Medium)' }, 
+    { pattern: 'big geeta', searchFor: 'Bhagavad Gita (Medium)' },
+    
+    // Gita acronyms & fallbacks
     { pattern: 'bg', searchFor: 'Bhagavad Gita (Small)' }, 
+    { pattern: 'b g', searchFor: 'Bhagavad Gita (Small)' }, 
+    { pattern: 'bee gee', searchFor: 'Bhagavad Gita (Small)' },
     { pattern: 'gita', searchFor: 'Bhagavad Gita (Small)' },
     { pattern: 'geeta', searchFor: 'Bhagavad Gita (Small)' },
+    
+    // Bhagavad spellings
+    { pattern: 'bhagavad gita', searchFor: 'Bhagavad Gita (Small)' },
+    { pattern: 'bhagawad gita', searchFor: 'Bhagavad Gita (Small)' },
+    { pattern: 'bhagvat gita', searchFor: 'Bhagavad Gita (Small)' },
+    { pattern: 'bhagwat gita', searchFor: 'Bhagavad Gita (Small)' },
+    { pattern: 'bagavad gita', searchFor: 'Bhagavad Gita (Small)' },
 
-    // Srimad Bhagavatam individual cantos
+    // ── SRIMAD BHAGAVATAM CANTOS ──
     { pattern: 'canto one', searchFor: 'SB 1.1' },
     { pattern: 'canto 1', searchFor: 'SB 1.1' },
+    { pattern: 'canto won', searchFor: 'SB 1.1' }, // Homophone
+    { pattern: 'first canto', searchFor: 'SB 1.1' },
+    { pattern: 'sb one', searchFor: 'SB 1.1' },
+    { pattern: 's b one', searchFor: 'SB 1.1' },
+    
     { pattern: 'canto two', searchFor: 'SB 2.1' },
     { pattern: 'canto 2', searchFor: 'SB 2.1' },
+    { pattern: 'canto to', searchFor: 'SB 2.1' }, // Homophone
+    { pattern: 'canto too', searchFor: 'SB 2.1' }, // Homophone
+    { pattern: 'second canto', searchFor: 'SB 2.1' },
+    { pattern: 'sb two', searchFor: 'SB 2.1' },
+    { pattern: 's b two', searchFor: 'SB 2.1' },
+    
     { pattern: 'canto six', searchFor: 'SB 6.1' },
     { pattern: 'canto 6', searchFor: 'SB 6.1' },
-    { pattern: 'sb one', searchFor: 'SB 1.1' },
-    { pattern: 'sb two', searchFor: 'SB 2.1' },
+    { pattern: 'canto sex', searchFor: 'SB 6.1' }, // Unfortunate STT reality
+    { pattern: 'sixth canto', searchFor: 'SB 6.1' },
     { pattern: 'sb six', searchFor: 'SB 6.1' },
+    { pattern: 's b six', searchFor: 'SB 6.1' },
 
-    // Krishna Books
+    // ── KRISHNA BOOKS ──
     { pattern: 'deluxe krishna', searchFor: 'Krishna Book (Deluxe)' },
     { pattern: 'big krishna', searchFor: 'Krishna Book (Deluxe)' },
+    { pattern: 'krishna book deluxe', searchFor: 'Krishna Book (Deluxe)' },
     { pattern: 'krishna book', searchFor: 'Krishna Book' },
+    { pattern: 'krsna book', searchFor: 'Krishna Book' },
+    { pattern: 'kreeshna', searchFor: 'Krishna Book' },
+    { pattern: 'krishna', searchFor: 'Krishna Book' }, 
 
-    // Small/Medium Books (Abbreviations & Nicknames)
+    // ── SMALL / MEDIUM BOOKS ──
+    // SSR
     { pattern: 'ssr', searchFor: 'Science of Self Realization' },
+    { pattern: 's s r', searchFor: 'Science of Self Realization' },
+    { pattern: 'es es ar', searchFor: 'Science of Self Realization' },
+    { pattern: 'science of self realization', searchFor: 'Science of Self Realization' },
+    { pattern: 'science of self realisation', searchFor: 'Science of Self Realization' }, // UK spelling
     { pattern: 'science of self', searchFor: 'Science of Self Realization' },
+    
+    // NOD
     { pattern: 'nod', searchFor: 'Nectar of Devotion' },
-    { pattern: 'noi', searchFor: 'Nectar of Instruction' },
-    { pattern: 'instruction', searchFor: 'Nectar of Instruction' },
+    { pattern: 'n o d', searchFor: 'Nectar of Devotion' },
+    { pattern: 'node', searchFor: 'Nectar of Devotion' }, // Homophone
+    { pattern: 'nectar of devotion', searchFor: 'Nectar of Devotion' },
     { pattern: 'devotion', searchFor: 'Nectar of Devotion' },
+    
+    // NOI
+    { pattern: 'noi', searchFor: 'Nectar of Instruction' },
+    { pattern: 'n o i', searchFor: 'Nectar of Instruction' },
+    { pattern: 'annoy', searchFor: 'Nectar of Instruction' }, // Homophone misheard
+    { pattern: 'nectar of instruction', searchFor: 'Nectar of Instruction' },
+    { pattern: 'instruction', searchFor: 'Nectar of Instruction' },
+    
+    // Isopanisad
     { pattern: 'iso', searchFor: 'Sri Isopanisad' },
+    { pattern: 'i s o', searchFor: 'Sri Isopanisad' },
+    { pattern: 'ice o', searchFor: 'Sri Isopanisad' }, // STT error
     { pattern: 'isopanisad', searchFor: 'Sri Isopanisad' },
+    { pattern: 'ishopanishad', searchFor: 'Sri Isopanisad' }, // SH spelling
+    { pattern: 'eeshopanishad', searchFor: 'Sri Isopanisad' }, // EE spelling
+    { pattern: 'iso panisad', searchFor: 'Sri Isopanisad' },
+    { pattern: 'sri isopanisad', searchFor: 'Sri Isopanisad' },
+    { pattern: 'shri ishopanishad', searchFor: 'Sri Isopanisad' },
+    
+    // Others
+    { pattern: 'perfection of yoga', searchFor: 'Perfection of Yoga' },
     { pattern: 'perfection', searchFor: 'Perfection of Yoga' },
     { pattern: 'yoga book', searchFor: 'Perfection of Yoga' },
-    { pattern: 'hiding', searchFor: 'Hiding in Unnatural Happiness' },
+    { pattern: 'hiding in unnatural happiness', searchFor: 'Hiding in Unnatural Happiness' },
     { pattern: 'unnatural happiness', searchFor: 'Hiding in Unnatural Happiness' },
+    { pattern: 'hiding', searchFor: 'Hiding in Unnatural Happiness' },
     { pattern: 'easy journey', searchFor: 'Easy Journey to Other Planets' },
     { pattern: 'planets', searchFor: 'Easy Journey to Other Planets' },
+    { pattern: 'chant and be happy', searchFor: 'Chant and Be Happy' },
+    { pattern: 'chanting be happy', searchFor: 'Chant and Be Happy' },
     { pattern: 'chant', searchFor: 'Chant and Be Happy' },
     { pattern: 'coming back', searchFor: 'Coming Back' },
-    { pattern: 'cookbook', searchFor: 'Higher Taste' },
+    { pattern: 'come back', searchFor: 'Coming Back' },
     { pattern: 'higher taste', searchFor: 'Higher Taste' },
+    { pattern: 'hire taste', searchFor: 'Higher Taste' }, // STT error
+    { pattern: 'cookbook', searchFor: 'Higher Taste' },
+    { pattern: 'cook book', searchFor: 'Higher Taste' },
     { pattern: 'four questions', searchFor: 'Four Questions' },
     { pattern: '4 questions', searchFor: 'Four Questions' },
+    { pattern: 'for questions', searchFor: 'Four Questions' }, 
     { pattern: 'five features', searchFor: 'Lord Caitanya in Five Features' },
-    { pattern: 'light of', searchFor: 'Light of the Bhagavata' },
+    { pattern: '5 features', searchFor: 'Lord Caitanya in Five Features' },
+    { pattern: 'lord chaitanya', searchFor: 'Lord Caitanya in Five Features' },
+    { pattern: 'lord caitanya', searchFor: 'Lord Caitanya in Five Features' },
+    { pattern: 'light of the bhagavata', searchFor: 'Light of the Bhagavata' },
+    { pattern: 'light of the bhagawat', searchFor: 'Light of the Bhagavata' },
+    { pattern: 'light of bagavata', searchFor: 'Light of the Bhagavata' },
     { pattern: 'family business', searchFor: 'Our Family Business' },
-    { pattern: 'lilamrita', searchFor: 'Srila Prabhupada Lilamrita' },
+    
+    // Lilamrita
     { pattern: 'spl', searchFor: 'Srila Prabhupada Lilamrita' },
+    { pattern: 's p l', searchFor: 'Srila Prabhupada Lilamrita' },
+    { pattern: 'es pee el', searchFor: 'Srila Prabhupada Lilamrita' },
+    { pattern: 'lilamrita', searchFor: 'Srila Prabhupada Lilamrita' },
+    { pattern: 'leelamrita', searchFor: 'Srila Prabhupada Lilamrita' }, 
+    { pattern: 'lila amrita', searchFor: 'Srila Prabhupada Lilamrita' },
+    { pattern: 'prabhupada', searchFor: 'Srila Prabhupada Lilamrita' }, 
+    { pattern: 'prabhu pada', searchFor: 'Srila Prabhupada Lilamrita' },
 
-    // Foreign Languages
+    // ── FOREIGN LANGUAGES ──
     { pattern: 'arabic gita', searchFor: 'Bhagavad Gita (Arabic)' },
+    { pattern: 'arabic geeta', searchFor: 'Bhagavad Gita (Arabic)' },
     { pattern: 'arabic small', searchFor: 'Small (Arabic)' },
     { pattern: 'arabic sb', searchFor: 'SB 1.1 (Arabic)' },
+    { pattern: 'arabic s b', searchFor: 'SB 1.1 (Arabic)' },
+    { pattern: 'arabic bhagavatam', searchFor: 'SB 1.1 (Arabic)' },
+    { pattern: 'arabic bhagawatam', searchFor: 'SB 1.1 (Arabic)' },
     { pattern: 'indian gita', searchFor: 'Bhagavad Gita (Indian Languages)' },
+    { pattern: 'indian geeta', searchFor: 'Bhagavad Gita (Indian Languages)' },
+    { pattern: 'hindi gita', searchFor: 'Bhagavad Gita (Indian Languages)' }, 
+    { pattern: 'hindi geeta', searchFor: 'Bhagavad Gita (Indian Languages)' }, 
     { pattern: 'gujarati krishna', searchFor: 'Krishna Book (Gujarati)' },
-    { pattern: 'french life', searchFor: 'Life Comes From Life (French)' }
+    { pattern: 'gujrati krishna', searchFor: 'Krishna Book (Gujarati)' }, // Missing 'a'
+    { pattern: 'gujarati', searchFor: 'Krishna Book (Gujarati)' },
+    { pattern: 'french life', searchFor: 'Life Comes From Life (French)' },
+    { pattern: 'french book', searchFor: 'Life Comes From Life (French)' }
   ];
 
   // 3. Smart Linker: Find the actual book name (Fixed Case-Sensitivity Bug)
