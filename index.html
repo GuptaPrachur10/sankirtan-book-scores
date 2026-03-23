@@ -110,12 +110,6 @@ header {
   min-width: 0;
 }
 
-.hdr-date {
-  appearance: auto;
-  -webkit-appearance: auto;
-  color: var(--gold);
-}
-
 .hdr-select:focus, .hdr-date:focus {
   border-color: var(--gold);
 }
@@ -959,13 +953,17 @@ function buildAliasMap() {
   const manual = [
     // ── SETS & BUNDLES ──
     { pattern: 'maha pancha', searchFor: 'Maha Pancha Set' },
-    { pattern: 'maha punch', searchFor: 'Maha Pancha Set' }, // STT error
+    { pattern: 'maha punch', searchFor: 'Maha Pancha Set' },
     { pattern: 'maha panch', searchFor: 'Maha Pancha Set' },
     { pattern: 'pancha set', searchFor: 'Maha Pancha Set' },
-    { pattern: 'punch a set', searchFor: 'Maha Pancha Set' }, // STT error
+    { pattern: 'punch a set', searchFor: 'Maha Pancha Set' },
+    { pattern: 'punch', searchFor: 'Maha Pancha Set' },
+    { pattern: 'maha', searchFor: 'Maha Pancha Set' },
     { pattern: 'maha set', searchFor: 'Maha Pancha Set' },
     { pattern: 'goswami', searchFor: 'Goswami Set' },
+    { pattern: 'goswami set', searchFor: 'Goswami Set' },
     { pattern: 'gosvami', searchFor: 'Goswami Set' },
+    { pattern: 'gosvami set', searchFor: 'Goswami Set' },
     { pattern: 'go swami', searchFor: 'Goswami Set' },
     { pattern: 'go svami', searchFor: 'Goswami Set' },
     
@@ -976,7 +974,9 @@ function buildAliasMap() {
     { pattern: 'bhagavatam set', searchFor: 'SB Set' },
     { pattern: 'bhagawatam set', searchFor: 'SB Set' }, // W instead of V
     { pattern: 'bhagvatam set', searchFor: 'SB Set' }, // Missing 'a'
-    { pattern: 'bhagwatam set', searchFor: 'SB Set' }, 
+    { pattern: 'bhagwatam set', searchFor: 'SB Set' },
+    { pattern: 'bhagwatham set', searchFor: 'SB Set' },
+    { pattern: 'bhagvatham set', searchFor: 'SB Set' },
     { pattern: 'bagavatam set', searchFor: 'SB Set' }, // Missing 'h'
     { pattern: 'srimad bhagavatam set', searchFor: 'SB Set' },
     { pattern: 'shrimad bhagavatam set', searchFor: 'SB Set' },
