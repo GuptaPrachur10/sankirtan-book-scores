@@ -404,6 +404,27 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: var(--white);
 }
 
+.q-num-input {
+  flex: 1;
+  width: 40px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(240,180,41,0.1);
+  border-right: 1px solid rgba(240,180,41,0.1);
+  color: var(--white);
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  outline: none;
+}
+
+.q-num-input::-webkit-outer-spin-button,
+.q-num-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .rm-btn {
   background: none;
   border: none;
@@ -715,9 +736,8 @@ function populateTeams() {
 
 // All selectable items = books + bundles
 function allItems() {
-  const items = [...CONFIG.books];
-  CONFIG.bundles.forEach(b => items.push(b.name));
-  return items;
+  const bundleNames = CONFIG.bundles.map(b => b.name);
+  return [...bundleNames, ...CONFIG.books];
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
@@ -731,8 +751,7 @@ window.addEventListener('DOMContentLoaded', () => {
 let entries = [], nextId = 1;
 
 function addEntry(itemName = '', qty = 1) {
-  const items = allItems();
-  entries.push({ id: nextId++, item: itemName || items[0], qty });
+  entries.push({ id: nextId++, item: itemName, qty });
   renderEntries();
 }
 
@@ -760,17 +779,30 @@ function renderEntries() {
     row.className = 'entry-row';
     row.innerHTML = `
       <select onchange="changeItem(${e.id}, this.value)">
+        <option value="" ${e.item === '' ? 'selected' : ''} disabled>-- Select Book --</option>
         ${items.map(i => `<option value="${i}"${i===e.item?' selected':''}>${i}</option>`).join('')}
       </select>
       <div class="qty-row">
         <button class="q-btn" onclick="changeQty(${e.id},-1)">−</button>
-        <div class="q-num">${e.qty}</div>
+        <input type="number" class="q-num-input" value="${e.qty}" 
+               onchange="updateQtyManual(${e.id}, this.value)"
+               inputmode="numeric">
         <button class="q-btn" onclick="changeQty(${e.id},+1)">+</button>
       </div>
       <button class="rm-btn" onclick="removeEntry(${e.id})">✕</button>`;
     list.appendChild(row);
   });
   updateTotal();
+}
+
+function updateQtyManual(id, val) {
+  const e = entries.find(e => e.id === id);
+  if (e) {
+    let num = parseInt(val);
+    if (isNaN(num) || num < 1) num = 1;
+    e.qty = num;
+    updateTotal();
+  }
 }
 
 function updateTotal() {
@@ -1031,6 +1063,12 @@ async function submitScore() {
     // Dev mode — just log
     console.log('Submission (no script URL):', rows);
     onSubmitSuccess(rows);
+    return;
+  }
+
+  const hasEmptySelection = entries.some(e => e.item === '');
+  if (hasEmptySelection) {
+    showModal('error', 'Incomplete List', 'Please select a book name for all rows or remove empty rows.');
     return;
   }
 
