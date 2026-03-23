@@ -146,23 +146,30 @@ header {
   gap: 8px;
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(78%) sepia(50%) saturate(600%) hue-rotate(350deg) brightness(100%) contrast(100%);
+    cursor: pointer;
+    font-size: 18px;
+}
+
 .mic-btn {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 13px;
+  padding: 15px;
   border-radius: 9px;
-  border: 1.5px solid rgba(240,180,41,0.3);
+  border: 2.5px solid var(--gold);
   background: rgba(240,180,41,0.05);
   color: var(--white);
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.18s;
   position: relative;
+  box-shadow: 0 0 10px rgba(240,180,41,0.1);
 }
 
 .mic-btn:active { transform: scale(0.98); }
