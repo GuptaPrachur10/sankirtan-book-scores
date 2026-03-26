@@ -1220,37 +1220,48 @@ async function submitScore() {
     return;
   }
 
-  // Build rows — one per entry (bundle stays as bundle name)
-  const rows = entries.map(e => ({
-    date, team, book: e.item, qty: e.qty,
-    submittedAt: new Date().toISOString()
-  }));
-
   const hasEmptySelection = entries.some(e => e.item === '');
   if (hasEmptySelection) {
     showModal('error', 'Incomplete List', 'Please select a book name for all rows or remove empty rows.');
     return;
   }
 
-  // 1. Show the loading spinner just for a split second so it feels active
+  // Build the data payload
+  const rows = entries.map(e => ({
+    date, team, book: e.item, qty: e.qty,
+    submittedAt: new Date().toISOString()
+  }));
+
+  // 1. Show the loading spinner
   const btn = document.querySelector('.submit-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>';
 
-  // 2. Fire the request in the background (Notice we removed 'await')
-  fetch(scriptUrl, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ rows })
-  }).catch(err => console.error("Background sync error:", err));
+  try {
+    const scriptUrl = CONFIG.googleSheets.scriptUrl;
+    
+    // 2. Fire the request in the background (Notice: NO "await" here!)
+    fetch(scriptUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rows })
+    }).catch(err => console.error("Background sync error:", err));
 
-  // 3. Instantly show the success modal and reset the UI!
-  setTimeout(() => {
-    onSubmitSuccess(rows);
+    // 3. Instantly show the success modal and reset the UI
+    setTimeout(() => {
+      onSubmitSuccess(rows);
+      btn.disabled = false;
+      btn.textContent = 'Submit';
+    }, 300);
+
+  } catch (error) {
+    // 🛡️ SAFETY NET: If anything breaks, reset the button so it doesn't get stuck!
     btn.disabled = false;
     btn.textContent = 'Submit';
-  }, 300); 
+    showModal('error', 'Error', 'Something went wrong. Check your config file and try again.');
+    console.error("Submission crashed:", error);
+  }
 }
 
 function onSubmitSuccess(rows) {
