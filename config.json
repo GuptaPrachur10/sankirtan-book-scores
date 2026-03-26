@@ -18,6 +18,8 @@
     "Others"
   ],
   "books": [
+  "Maha Pancha Set",
+  "Goswami Set",
   "CC Set",
   "SB Set",
   "Perfection of Yoga",
@@ -48,28 +50,5 @@
   "Bhagavad Gita (Indian Languages)",
   "Krishna Book (Gujarati)",
   "Life Comes From Life (French)"
-],
-  "bundles": [
-    {
-      "name": "Maha Pancha Set",
-      "books": [
-        "Four Questions",
-        "Hiding in Unnatural Happiness",
-        "Bhagavad Gita (Small)", 
-        "SB 1.1",
-        "Science of Self Realization"
-  ]
-    },
-    {
-      "name": "Goswami Set",
-      "books": [
-        "Chant and Be Happy", 
-        "Coming Back",
-        "Higher Taste",
-        "Nectar of Instruction",
-        "Perfection of Yoga",
-        "Sri Isopanisad"
-  ]
-    }
-  ]
+]
 }
