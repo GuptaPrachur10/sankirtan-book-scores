@@ -644,7 +644,7 @@ footer {
   font-size: 30px;
   color: var(--white);
   line-height: 1;
-  letter-spacing: 2.5px;
+  letter-spacing: 2px;
   margin: 0;
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
   padding: 12px;
@@ -710,7 +710,7 @@ body.modal-open { overflow: hidden; }
         <span class="total-badge" id="totalBadge">0 total</span>
       </div>
       <div class="col-heads">
-        <span class="col-head">Book / Bundle</span>
+        <span class="col-head">Book / Set</span>
         <span class="col-head c">Qty</span>
         <span></span>
       </div>
@@ -776,10 +776,8 @@ function populateTeams() {
   });
 }
 
-// All selectable items = books + bundles
 function allItems() {
-  const bundleNames = CONFIG.bundles.map(b => b.name);
-  return [...bundleNames, ...CONFIG.books];
+  return CONFIG.books;
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
