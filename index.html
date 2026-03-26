@@ -752,19 +752,10 @@ async function loadConfig() {
   try {
     const r = await fetch('config.json?v=' + Date.now());
     CONFIG = await r.json();
+    populateTeams();
   } catch(e) {
-    // Fallback defaults if config.json not found (for local dev)
-    CONFIG = {
-      teams: ["Ladies Party", "Men's Party", "Reception", "Youth Group", "Soho Street Team", "Online Sankirtan"],
-      books: ["Bhagavad Gita As It Is","Srimad Bhagavatam","Chaitanya Charitamrita","Nectar of Devotion","Nectar of Instruction","Science of Self Realization","Perfect Questions Perfect Answers","Journey of Self Discovery","Krishna Book","Higher Taste","Small Book / Booklet","Magazine / BTG"],
-      bundles: [
-        { name: "Starter Pack", books: ["Bhagavad Gita As It Is","Higher Taste","Small Book / Booklet"] },
-        { name: "Full Set", books: ["Bhagavad Gita As It Is","Nectar of Devotion","Nectar of Instruction","Science of Self Realization","Higher Taste"] }
-      ],
-      googleSheets: { scriptUrl: "" }
-    };
+    showModal('error', 'Connection Error', 'Could not load book lists. Please check your internet connection and refresh.');
   }
-  populateTeams();
 }
 
 function populateTeams() {
@@ -1234,14 +1225,6 @@ async function submitScore() {
     date, team, book: e.item, qty: e.qty,
     submittedAt: new Date().toISOString()
   }));
-
-  const scriptUrl = CONFIG.googleSheets?.scriptUrl;
-  if (!scriptUrl || scriptUrl === 'YOUR_APPS_SCRIPT_URL_HERE') {
-    // Dev mode — just log
-    console.log('Submission (no script URL):', rows);
-    onSubmitSuccess(rows);
-    return;
-  }
 
   const hasEmptySelection = entries.some(e => e.item === '');
   if (hasEmptySelection) {
