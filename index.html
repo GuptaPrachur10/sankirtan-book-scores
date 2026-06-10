@@ -562,6 +562,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .search-list::-webkit-scrollbar-thumb { background: rgba(240,180,41,0.2); border-radius: 3px; }
 
 .search-item {
+  width: 100%;
+  text-align: left;
   padding: 14px 12px;
   background: var(--navy-card);
   border: 1px solid rgba(255,255,255,0.04);
@@ -570,9 +572,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.1s;
 }
 .search-item:active {
-  background: rgba(240,180,41,0.1);
+  background: rgba(240,180,41,0.15);
   border-color: var(--gold);
 }
   
@@ -927,7 +931,7 @@ function renderEntries() {
     const row = document.createElement('div');
     row.className = 'entry-row';
     row.innerHTML = `
-      <button class="book-select-btn" onclick="openBookSearch(${e.id})">
+      <button type="button" class="book-select-btn" onclick="openBookSearch(${e.id})">
         ${e.item || '-- Select Book --'}
       </button>
       <div class="qty-row">
@@ -1400,9 +1404,8 @@ function openBookSearch(id) {
   // Populate the list 
   const items = allItems();
   list.innerHTML = items.map(book => {
-    // Escape single quotes to prevent bugs
     const safeBook = book.replace(/'/g, "\\'");
-    return `<div class="search-item" onclick="selectBookFromSearch('${safeBook}')">${book}</div>`;
+    return `<button type="button" class="search-item" onclick="selectBookFromSearch('${safeBook}')">${book}</button>`;
   }).join('');
   
   input.value = '';
