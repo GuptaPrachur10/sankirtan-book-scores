@@ -9,13 +9,11 @@
 :root {
   --navy:       #111827;
   --navy-mid:   #1c2340;
-  --navy-light: #242d4e;
   --navy-card:  #1a2240;
   --gold:       #f0b429;
   --gold-dim:   #c8941a;
   --orange:     #e07b10;
   --white:      #f4f6ff;
-  --muted:      #6b7499;
   --border:     rgba(240,180,41,0.15);
   --danger:     #e05555;
   --success:    #34c47c;
@@ -150,60 +148,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(78%) sepia(50%) saturate(600%) hue-rotate(350deg) brightness(100%) contrast(100%);
     cursor: pointer;
     font-size: 16px;
-}
-
-.mic-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 14px;
-  border-radius: 9px;
-  border: 1.5px solid var(--gold);
-  background: rgba(240,180,41,0.05);
-  color: var(--white);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.18s;
-  position: relative;
-  box-shadow: 0 0 10px rgba(240,180,41,0.1);
-}
-
-.mic-btn:active { transform: scale(0.98); }
-
-.mic-btn.recording {
-  border-color: var(--danger);
-  background: rgba(224,85,85,0.08);
-  color: var(--danger);
-}
-
-.mic-btn.recording .mic-dot {
-  animation: blink 0.9s infinite;
-}
-
-@keyframes blink {
-  0%,100% { opacity: 1; }
-  50%      { opacity: 0.3; }
-}
-
-.mic-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--gold);
-  flex-shrink: 0;
-}
-
-.mic-btn.recording .mic-dot { background: var(--danger); }
-
-.mic-hint {
-  font-size: 11px;
-  color: var(--white);
-  text-align: center;
-  line-height: 1.5;
 }
 
 /* transcript */
@@ -354,25 +298,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   to   { opacity: 1; transform: translateX(0); }
 }
 
-.entry-row select {
-  width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(240,180,41,0.1);
-  border-radius: 7px;
-  color: var(--white);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 7px 8px;
-  outline: none;
-  appearance: none;
-  cursor: pointer;
-  transition: border-color 0.12s;
-}
-
-.entry-row select:focus { border-color: var(--gold); }
-.entry-row select option { background: var(--navy); }
-
 .qty-row {
   display: flex;
   align-items: center;
@@ -400,17 +325,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .q-btn:active { background: rgba(240,180,41,0.12); }
-
-.q-num {
-  flex: 1;
-  text-align: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 14px;
-  font-weight: 500;
-  border-left: 1px solid rgba(240,180,41,0.1);
-  border-right: 1px solid rgba(240,180,41,0.1);
-  color: var(--white);
-}
 
 .q-num-input {
   flex: 1;
@@ -865,7 +779,7 @@ body.modal-open { overflow: hidden; }
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────────
-let CONFIG = { teams: [], books: [], bundles: [], googleSheets: {} };
+let CONFIG = { teams: [], books: [], googleSheets: {} };
 
 async function loadConfig() {
   try {
@@ -894,7 +808,6 @@ function allItems() {
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
   loadConfig();
-  initSpeech();
 });
 
 // ── ENTRIES ───────────────────────────────────────────────────────────────────
@@ -925,7 +838,6 @@ function changeQty(id, d) {
 
 function renderEntries() {
   const list = document.getElementById('entriesList');
-  const items = allItems();
   list.innerHTML = '';
   entries.forEach(e => {
     const row = document.createElement('div');
@@ -960,11 +872,6 @@ function updateQtyManual(id, val) {
 function updateTotal() {
   const sum = entries.reduce((a, e) => a + e.qty, 0);
   document.getElementById('totalBadge').textContent = sum + ' total';
-}
-
-// ── CHAT EXTRACTOR ─────────────────────────────────────────────────────────────
-function initSpeech() {
-  // No longer needed, kept as placeholder to avoid breaking any callers
 }
 
 function discardTranscript() {
