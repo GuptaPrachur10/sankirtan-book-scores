@@ -632,6 +632,7 @@ footer {
   color: #9ba3c8;
   text-align: center;
   line-height: 1.55;
+  white-space: pre-line;
 }
 
 .modal-close {
@@ -780,11 +781,17 @@ body.modal-open { overflow: hidden; }
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────────
 let CONFIG = { teams: [], books: [], googleSheets: {} };
+let ALIASES = {};
 
 async function loadConfig() {
   try {
-    const r = await fetch('config.json?v=' + Date.now());
-    CONFIG = await r.json();
+    const v = '?v=' + Date.now();
+    const [cfg, aliases] = await Promise.all([
+      fetch('config.json' + v).then(r => r.json()),
+      fetch('aliases.json' + v).then(r => r.json())
+    ]);
+    CONFIG = cfg;
+    ALIASES = aliases;
     populateTeams();
   } catch(e) {
     showModal('error', 'Connection Error', 'Could not load book lists. Please check your internet connection and refresh.');
@@ -908,351 +915,11 @@ function buildAliasMap() {
     map.push({ pattern: name.toLowerCase(), name: name });
   });
 
-  // 2. Custom manual overrides
-  const manual = [
-    // Maha Pancha Set
-    { pattern: 'mps', searchFor: 'Maha Pancha Set' },
-    { pattern: 'maha panca', searchFor: 'Maha Pancha Set' },
-    { pattern: 'panca', searchFor: 'Maha Pancha Set' },
-    { pattern: 'maha pancha', searchFor: 'Maha Pancha Set' },
-    { pattern: 'pancha', searchFor: 'Maha Pancha Set' },
-    { pattern: 'maha', searchFor: 'Maha Pancha Set' },
-
-    // Goswami Set
-    { pattern: 'gs', searchFor: 'Goswami Set' },
-    { pattern: 'gos', searchFor: 'Goswami Set' },
-    { pattern: '6 gos', searchFor: 'Goswami Set' },
-    { pattern: 'goswami', searchFor: 'Goswami Set' },
-    { pattern: 'gosvami', searchFor: 'Goswami Set' },
-    { pattern: 'goswami set', searchFor: 'Goswami Set' },
-    { pattern: 'gosvami set', searchFor: 'Goswami Set' },
-
-    // Triyuga Set
-    { pattern: 'tys', searchFor: 'Triyuga Set' },
-    { pattern: 'yuga', searchFor: 'Triyuga Set' },
-    { pattern: 'triyuga', searchFor: 'Triyuga Set' },
-    { pattern: 'tri yug', searchFor: 'Triyuga Set' },
-    { pattern: 'tri yuga', searchFor: 'Triyuga Set' },
-    { pattern: 'tri-yuga', searchFor: 'Triyuga Set' },
-    { pattern: 'tri yuga set', searchFor: 'Triyuga Set' },
-    { pattern: 'triyuga set', searchFor: 'Triyuga Set' },
-
-    // Tridandi Set
-    { pattern: 'tds', searchFor: 'Tridandi Set' },
-    { pattern: 'dandi', searchFor: 'Tridandi Set' },
-    { pattern: 'tridandi', searchFor: 'Tridandi Set' },
-    { pattern: 'tri dandi', searchFor: 'Tridandi Set' },
-    { pattern: 'tri dandi set', searchFor: 'Tridandi Set' },
-    { pattern: 'tri-dandi', searchFor: 'Tridandi Set' },
-    { pattern: 'tridandi set', searchFor: 'Tridandi Set' },
-
-    // Trivikrama Set
-    { pattern: 'tvs', searchFor: 'Trivikrama Set' },
-    { pattern: 'vikrama', searchFor: 'Trivikrama Set' },
-    { pattern: 'vikram', searchFor: 'Trivikrama Set' },
-    { pattern: 'trivikrama', searchFor: 'Trivikrama Set' }, 
-    { pattern: 'trivikram', searchFor: 'Trivikrama Set' },
-    { pattern: 'tri vikrama', searchFor: 'Trivikrama Set' },
-    { pattern: 'tri vikrama set', searchFor: 'Trivikrama Set' },
-    { pattern: 'tri vikram', searchFor: 'Trivikrama Set' },
-    { pattern: 'tri vikram set', searchFor: 'Trivikrama Set' },    
-    { pattern: 'tri-vikrama', searchFor: 'Trivikrama Set' },
-    { pattern: 'trivikrama set', searchFor: 'Trivikrama Set' }, 
-    { pattern: 'trivikram set', searchFor: 'Trivikrama Set' }, 
-
-    // Arabic Set
-    { pattern: 'as', searchFor: 'Arabic Set' },
-    { pattern: 'arabic set', searchFor: 'Arabic Set' },
-    { pattern: 'set arabic', searchFor: 'Arabic Set' },
-
-    // Farsi Set
-    { pattern: 'fs', searchFor: 'Farsi Set' },
-    { pattern: 'farsi', searchFor: 'Farsi Set' },
-    { pattern: 'farsi set', searchFor: 'Farsi Set' },
-    { pattern: 'set farsi', searchFor: 'Farsi Set' },
-
-    // Saptarishi Set
-    { pattern: 'sapta', searchFor: 'Saptarishi Set' },
-    { pattern: 'rishi', searchFor: 'Saptarishi Set' },
-    { pattern: 'saptarishi', searchFor: 'Saptarishi Set' },
-    { pattern: 'saptarishi set', searchFor: 'Saptarishi Set' }, 
-    { pattern: 'sapta rishi set', searchFor: 'Saptarishi Set' },
-    { pattern: 'risi', searchFor: 'Saptarishi Set' },
-    { pattern: 'risi set', searchFor: 'Saptarishi Set' },
-    { pattern: 'saptarisi set', searchFor: 'Saptarishi Set' },
-    { pattern: 'sapta risi set', searchFor: 'Saptarishi Set' },    
-    { pattern: 'sapta-rishi', searchFor: 'Saptarishi Set' },
-    { pattern: 'sapta-rishi set', searchFor: 'Saptarishi Set' }, 
-    
-    // CC Set
-    { pattern: 'cc', searchFor: 'CC Set' },
-    { pattern: 'cc set', searchFor: 'CC Set' },
-    { pattern: 'caitanya caritamrta', searchFor: 'CC Set' },
-    { pattern: 'chaitanya charitamrita', searchFor: 'CC Set' },
-
-    // SB Set
-    { pattern: 'sbs', searchFor: 'SB Set' },
-    { pattern: 'sb set', searchFor: 'SB Set' },
-    { pattern: 'bhagavatam set', searchFor: 'SB Set' },
-    { pattern: 'srimad bhagavatam set', searchFor: 'SB Set' },
-
-    // Perfection of Yoga
-    { pattern: 'poy', searchFor: 'Perfection of Yoga' },
-    { pattern: 'yoga', searchFor: 'Perfection of Yoga' },
-    { pattern: 'perfection', searchFor: 'Perfection of Yoga' },
-    { pattern: 'perfection of', searchFor: 'Perfection of Yoga' },
-
-    // Four Questions
-    { pattern: 'fq', searchFor: 'Four Questions' },
-    { pattern: 'four', searchFor: 'Four Questions' },
-    { pattern: 'four questions', searchFor: 'Four Questions' },
-    { pattern: 'four ques', searchFor: 'Four Questions' },
-    { pattern: 'fourques', searchFor: 'Four Questions' },
-    { pattern: '4 ques', searchFor: 'Four Questions' },
-    { pattern: '4ques', searchFor: 'Four Questions' },
-    { pattern: '4 questions', searchFor: 'Four Questions' },
-    { pattern: '4 q', searchFor: 'Four Questions' },
-    { pattern: '4q', searchFor: 'Four Questions' },
-
-    // Hiding in Unnatural Happiness
-    { pattern: 'hiuh', searchFor: 'Hiding in Unnatural Happiness' },
-    { pattern: 'hiding', searchFor: 'Hiding in Unnatural Happiness' },
-    { pattern: 'hiding in', searchFor: 'Hiding in Unnatural Happiness' },
-    { pattern: 'unnatural happiness', searchFor: 'Hiding in Unnatural Happiness' },
-
-    // Easy Journey to Other Planets
-    { pattern: 'ejop', searchFor: 'Easy Journey to Other Planets' },
-    { pattern: 'ejtop', searchFor: 'Easy Journey to Other Planets' },
-    { pattern: 'easy', searchFor: 'Easy Journey to Other Planets' },
-    { pattern: 'journey', searchFor: 'Easy Journey to Other Planets' },
-    { pattern: 'easy journey', searchFor: 'Easy Journey to Other Planets' },
-
-    // Chant and Be Happy
-    { pattern: 'cbh', searchFor: 'Chant and Be Happy' },
-    { pattern: 'cabh', searchFor: 'Chant and Be Happy' },
-    { pattern: 'chant', searchFor: 'Chant and Be Happy' },
-    { pattern: 'happy', searchFor: 'Chant and Be Happy' },
-    { pattern: 'chant and', searchFor: 'Chant and Be Happy' },
-
-    // Coming Back
-    { pattern: 'cb', searchFor: 'Coming Back' },
-    { pattern: 'coming', searchFor: 'Coming Back' },
-    { pattern: 'coming back', searchFor: 'Coming Back' },
-
-    // Higher Taste
-    { pattern: 'ht', searchFor: 'Higher Taste' },
-    { pattern: 'higher', searchFor: 'Higher Taste' },
-    { pattern: 'higher taste', searchFor: 'Higher Taste' },
-
-    // Nectar of Instruction
-    { pattern: 'noi', searchFor: 'Nectar of Instruction' },
-    { pattern: 'nectar of instruction', searchFor: 'Nectar of Instruction' },
-    { pattern: 'instruction', searchFor: 'Nectar of Instruction' },
-
-    // Sri Isopanisad
-    { pattern: 'iso', searchFor: 'Sri Isopanisad' },
-    { pattern: 'sri isopanisad', searchFor: 'Sri Isopanisad' },
-    { pattern: 'isopanisad', searchFor: 'Sri Isopanisad' },
-    { pattern: 'sri', searchFor: 'Sri Isopanisad' },
-
-    // Lord Caitanya in Five Features
-    { pattern: 'lciff', searchFor: 'Lord Caitanya in Five Features' },
-    { pattern: 'lord', searchFor: 'Lord Caitanya in Five Features' },
-    { pattern: 'lord caitanya', searchFor: 'Lord Caitanya in Five Features' },
-    { pattern: 'five features', searchFor: 'Lord Caitanya in Five Features' },
-
-    // Light of the Bhagavata
-    { pattern: 'lob', searchFor: 'Light of the Bhagavata' },
-    { pattern: 'lotb', searchFor: 'Light of the Bhagavata' },
-    { pattern: 'light', searchFor: 'Light of the Bhagavata' },
-    { pattern: 'light of', searchFor: 'Light of the Bhagavata' },
-
-    // Science of Self Realization
-    { pattern: 'ssr', searchFor: 'Science of Self Realization' },
-    { pattern: 'science', searchFor: 'Science of Self Realization' },
-    { pattern: 'science of', searchFor: 'Science of Self Realization' },
-
-    // Bhagavad Gita (Small)
-    { pattern: 'bgs', searchFor: 'Bhagavad Gita (Small)' },
-    { pattern: 'bg small', searchFor: 'Bhagavad Gita (Small)' },
-    { pattern: 'small bg', searchFor: 'Bhagavad Gita (Small)' },
-    { pattern: 'bhagavad gita small', searchFor: 'Bhagavad Gita (Small)' },
-    { pattern: 'small bhagavad gita', searchFor: 'Bhagavad Gita (Small)' },
-    { pattern: 'gita small', searchFor: 'Bhagavad Gita (Small)' },
-    { pattern: 'small gita', searchFor: 'Bhagavad Gita (Small)' },
-    { pattern: 'sbg', searchFor: 'Bhagavad Gita (Small)' },
-    { pattern: 'gita', searchFor: 'Bhagavad Gita (Small)' },
-    { pattern: 'bg', searchFor: 'Bhagavad Gita (Small)' }, // defaulting bg to small
-
-    // Bhagavad Gita (Medium)
-    { pattern: 'bgm', searchFor: 'Bhagavad Gita (Medium)' },
-    { pattern: 'bg medium', searchFor: 'Bhagavad Gita (Medium)' },
-    { pattern: 'bhagavad gita medium', searchFor: 'Bhagavad Gita (Medium)' },
-    { pattern: 'medium bhagavad gita', searchFor: 'Bhagavad Gita (Medium)' },
-    { pattern: 'gita medium', searchFor: 'Bhagavad Gita (Medium)' },
-    { pattern: 'medium gita', searchFor: 'Bhagavad Gita (Medium)' },
-    { pattern: 'medium bg', searchFor: 'Bhagavad Gita (Medium)' },
-    { pattern: 'big bg', searchFor: 'Bhagavad Gita (Medium)' },
-    { pattern: 'bg big', searchFor: 'Bhagavad Gita (Medium)' },
-    { pattern: 'big gita', searchFor: 'Bhagavad Gita (Medium)' },
-    { pattern: 'gita big', searchFor: 'Bhagavad Gita (Medium)' },
-
-    // Bhagavad Gita (Premium)
-    { pattern: 'bgp', searchFor: 'Bhagavad Gita (Premium)' },
-    { pattern: 'bhagavad gita premium', searchFor: 'Bhagavad Gita (Premium)' },
-    { pattern: 'premium bhagavad gita ', searchFor: 'Bhagavad Gita (Premium)' },
-    { pattern: 'gita premium', searchFor: 'Bhagavad Gita (Premium)' },
-    { pattern: 'premium gita', searchFor: 'Bhagavad Gita (Premium)' },
-    { pattern: 'premium bg', searchFor: 'Bhagavad Gita (Premium)' },
-    { pattern: 'bg premium', searchFor: 'Bhagavad Gita (Premium)' },
-
-    // SB 1.1
-    { pattern: 'sb11', searchFor: 'SB 1.1' },
-    { pattern: 'sb 1.1', searchFor: 'SB 1.1' },
-    { pattern: 'sb1', searchFor: 'SB 1.1' },
-    { pattern: 'sb 1', searchFor: 'SB 1.1' },
-    { pattern: 'canto 1', searchFor: 'SB 1.1' },
-
-    // SB 2.1
-    { pattern: 'sb21', searchFor: 'SB 2.1' },
-    { pattern: 'sb 2.1', searchFor: 'SB 2.1' },
-    { pattern: 'sb 2', searchFor: 'SB 2.1' },
-    { pattern: 'sb2', searchFor: 'SB 2.1' },
-    { pattern: 'canto 2', searchFor: 'SB 2.1' },
-
-    // SB 6.1
-    { pattern: 'sb61', searchFor: 'SB 6.1' },
-    { pattern: 'sb 6.1', searchFor: 'SB 6.1' },
-    { pattern: 'sb 6', searchFor: 'SB 6.1' },
-    { pattern: 'sb6', searchFor: 'SB 6.1' },
-    { pattern: '6th', searchFor: 'SB 6.1' },
-    { pattern: '6th cant', searchFor: 'SB 6.1' },
-    { pattern: '6th canto', searchFor: 'SB 6.1' },
-    { pattern: '6th can', searchFor: 'SB 6.1' },
-    { pattern: 'canto 6', searchFor: 'SB 6.1' },
-
-    // Krishna Book
-    { pattern: 'kb', searchFor: 'Krishna Book' },
-    { pattern: 'krishna', searchFor: 'Krishna Book' },
-    { pattern: 'krsna', searchFor: 'Krishna Book' },
-    { pattern: 'krishna book', searchFor: 'Krishna Book' },
-    { pattern: 'krsna book', searchFor: 'Krishna Book' },
-
-    // Krishna Book (Deluxe)
-    { pattern: 'kbd', searchFor: 'Krishna Book (Deluxe)' },
-    { pattern: 'kb deluxe', searchFor: 'Krishna Book (Deluxe)' },
-    { pattern: 'deluxe', searchFor: 'Krishna Book (Deluxe)' },
-
-    // Nectar of Devotion
-    { pattern: 'nod', searchFor: 'Nectar of Devotion' },
-    { pattern: 'nectar', searchFor: 'Nectar of Devotion' },
-    { pattern: 'devotion', searchFor: 'Nectar of Devotion' },
-    { pattern: 'nectar of', searchFor: 'Nectar of Devotion' },
-
-    // Teachings of Lord Caitanya
-    { pattern: 'tlc', searchFor: 'Teachings of Lord Caitanya' },
-    { pattern: 'tolc', searchFor: 'Teachings of Lord Caitanya' },
-    { pattern: 'teachings', searchFor: 'Teachings of Lord Caitanya' },
-    { pattern: 'teachings of', searchFor: 'Teachings of Lord Caitanya' },
-
-    // Our Family Business
-    { pattern: 'ofb', searchFor: 'Our Family Business' },
-    { pattern: 'our', searchFor: 'Our Family Business' },
-    { pattern: 'family', searchFor: 'Our Family Business' },
-    { pattern: 'business', searchFor: 'Our Family Business' },
-    { pattern: 'our family', searchFor: 'Our Family Business' },
-
-    // Srila Prabhupada Lilamrita
-    { pattern: 'spl', searchFor: 'Srila Prabhupada Lilamrita' },
-    { pattern: 'srila', searchFor: 'Srila Prabhupada Lilamrita' },
-    { pattern: 'lilamrita', searchFor: 'Srila Prabhupada Lilamrita' },
-    { pattern: 'srila prabhupada', searchFor: 'Srila Prabhupada Lilamrita' },
-
-    // Small (Arabic)
-    { pattern: 'sa', searchFor: 'Small (Arabic)' },
-    { pattern: 'small arabic', searchFor: 'Small (Arabic)' },
-    { pattern: 'arabic small', searchFor: 'Small (Arabic)' },
-    { pattern: 'arabic (small)', searchFor: 'Small (Arabic)' },
-
-    // Bhagavad Gita (Arabic)
-    { pattern: 'bga', searchFor: 'Bhagavad Gita (Arabic)' },
-    { pattern: 'bg arabic', searchFor: 'Bhagavad Gita (Arabic)' },
-    { pattern: 'arabic bg', searchFor: 'Bhagavad Gita (Arabic)' },
-    { pattern: 'arabic gita', searchFor: 'Bhagavad Gita (Arabic)' },
-    { pattern: 'gita arabic', searchFor: 'Bhagavad Gita (Arabic)' },
-
-    // SB 1.1 (Arabic)
-    { pattern: 'sb11a', searchFor: 'SB 1.1 (Arabic)' },
-    { pattern: 'sb 1.1 arabic', searchFor: 'SB 1.1 (Arabic)' },
-
-    // Bhagavad Gita (Indian Languages)
-    { pattern: 'bgil', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    // Gujarati combinations
-    { pattern: 'bg guj', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'guj bg', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'gita guj', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'guj gita', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'bg gujarati', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'gujarati bg', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'gita gujarati', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'gujarati gita', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    // Hindi combinations
-    { pattern: 'bg hindi', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'hindi bg', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'gita hindi', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'hindi gita', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    // Indian combinations
-    { pattern: 'bg indian', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'indian bg', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'gita indian', searchFor: 'Bhagavad Gita (Indian Languages)' },
-    { pattern: 'indian gita', searchFor: 'Bhagavad Gita (Indian Languages)' },
-
-    // Bhagavad Gita (Sanksrit)
-    { pattern: 'bgs', searchFor: 'Bhagavad Gita (Sanksrit)' },
-    { pattern: 'bhagavad gita sanskrit', searchFor: 'Bhagavad Gita (Sanksrit)' },
-    { pattern: 'gita sanskrit', searchFor: 'Bhagavad Gita (Sanksrit)' },
-    { pattern: 'sanskrit gita', searchFor: 'Bhagavad Gita (Sanksrit)' },
-    { pattern: 'sanksrit bg', searchFor: 'Bhagavad Gita (Sanksrit)' },
-    { pattern: 'bg sanksrit', searchFor: 'Bhagavad Gita (Sanksrit)' },
-    
-    // Krishna Book (Indian Languages)
-    { pattern: 'kbg', searchFor: 'Krishna Book (Indian Languages)' },
-    // Gujarati combinations
-    { pattern: 'kb guj', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'guj kb', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'kb gujarati', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'gujarati kb', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'krsna guj', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'guj krsna', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'krishna guj', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'guj krishna', searchFor: 'Krishna Book (Indian Languages)' },
-    // Hindi combinations
-    { pattern: 'kb hindi', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'hindi kb', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'krsna hindi', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'hindi krsna', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'krishna hindi', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'hindi krishna', searchFor: 'Krishna Book (Indian Languages)' },
-    // Indian combinations
-    { pattern: 'kb indian', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'indian kb', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'krsna indian', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'indian krsna', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'krishna indian', searchFor: 'Krishna Book (Indian Languages)' },
-    { pattern: 'indian krishna', searchFor: 'Krishna Book (Indian Languages)' },
-
-    // Life Comes From Life (French)
-    { pattern: 'lcfl', searchFor: 'Life Comes From Life (French)' },
-    { pattern: 'life comes', searchFor: 'Life Comes From Life (French)' },
-    { pattern: 'french', searchFor: 'Life Comes From Life (French)' }
-  ];
-
-  // 3. Smart Linker: Find the actual book name
-  manual.forEach(alias => {
-    const realBookName = items.find(item => item.toLowerCase().includes(alias.searchFor.toLowerCase()));
-    if (realBookName) {
-      map.push({ pattern: alias.pattern, name: realBookName });
-    }
+  // 2. Custom aliases from aliases.json ({ "Book Name": ["alias", ...] })
+  Object.entries(ALIASES).forEach(([searchFor, patterns]) => {
+    const realBookName = items.find(item => item.toLowerCase().includes(searchFor.toLowerCase()));
+    if (!realBookName) return;
+    patterns.forEach(pattern => map.push({ pattern, name: realBookName }));
   });
 
   return map;
@@ -1262,8 +929,19 @@ function parseTranscript() {
   let rawText = document.getElementById('chatInput').value.trim().toLowerCase();
   if (!rawText) return;
 
-  // Clean up filler words
-  let text = rawText.replace(/\b(and|add|put|is)\b/g, ' ');
+  // Strip WhatsApp message headers, if present, so sender names (e.g. "Krsna")
+  // aren't mistaken for books. Handles both copy formats:
+  //   "[19/11, 8:56 pm] Sender Name: ..."      (iOS / copied messages)
+  //   "19/11/2026, 20:56 - Sender Name: ..."   (Android / exported chat)
+  rawText = rawText
+    .replace(/^\s*\[\d{1,2}\/\d{1,2}(?:\/\d{2,4})?,[^\]\n]*\][^:\n]*:/gm, '')
+    .replace(/^\s*\d{1,2}\/\d{1,2}\/\d{2,4},\s*\d{1,2}:\d{2}(?::\d{2})?(?:\s*[ap]\.?m\.?)?\s*[-–]\s*[^:\n]*:/gm, '');
+
+  // Clean up filler words ("and" is kept so names like "Chant and Be Happy" stay intact)
+  let text = rawText
+    .replace(/&/g, ' and ')
+    .replace(/\b(add|put|is)\b/g, ' ')
+    .replace(/[ \t]+/g, ' ');
 
   const aliasesMap = buildAliasMap();
   
@@ -1284,10 +962,14 @@ function parseTranscript() {
   // Split by commas, semicolons, or newlines to process chunks safely
   const chunks = text.split(/[,;\n\r]+/);
   
+  const unrecognised = [];
+
   chunks.forEach(chunk => {
     let match;
+    let chunkMatched = false;
     while ((match = regex.exec(chunk)) !== null) {
       foundAny = true;
+      chunkMatched = true;
       let qtyStr = match[1] || match[3];
       let bookPattern = match[2].toLowerCase(); // Plurals inside pattern group are untouched
       
@@ -1314,6 +996,11 @@ function parseTranscript() {
         }
       }
     }
+    // Flag lines that look like a score (a number next to words, ignoring dates) but matched no book
+    const withoutDates = chunk.replace(/\b\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\b/g, '');
+    if (!chunkMatched && /\b\d+\b/.test(withoutDates) && /[a-z]{2,}/.test(withoutDates)) {
+      unrecognised.push(chunk.trim());
+    }
   });
 
   if (!foundAny) {
@@ -1324,6 +1011,11 @@ function parseTranscript() {
   // Add them to the UI list
   results.forEach(r => addEntry(r.name, r.qty));
   discardTranscript();
+
+  if (unrecognised.length) {
+    showModal('error', 'Check These Lines',
+      'These lines were not recognised and were NOT added. Please add them manually:\n\n' + unrecognised.join('\n'));
+  }
 
   // Scroll smoothly down to the updated list
   document.getElementById('entriesList').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
