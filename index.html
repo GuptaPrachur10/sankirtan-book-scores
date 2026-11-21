@@ -780,18 +780,20 @@ body.modal-open { overflow: hidden; }
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────────
-let CONFIG = { teams: [], books: [], googleSheets: {} };
-let ALIASES = {};
+let CONFIG = { teams: [], googleSheets: {} };
+// books.json: { "Book Name": ["alias", ...] } — the single source of truth for
+// the book list (in display order) and the shorthand people use in chats.
+let BOOKS = {};
 
 async function loadConfig() {
   try {
     const v = '?v=' + Date.now();
-    const [cfg, aliases] = await Promise.all([
+    const [cfg, books] = await Promise.all([
       fetch('config.json' + v).then(r => r.json()),
-      fetch('aliases.json' + v).then(r => r.json())
+      fetch('books.json' + v).then(r => r.json())
     ]);
     CONFIG = cfg;
-    ALIASES = aliases;
+    BOOKS = books;
     populateTeams();
   } catch(e) {
     showModal('error', 'Connection Error', 'Could not load book lists. Please check your internet connection and refresh.');
@@ -808,7 +810,7 @@ function populateTeams() {
 }
 
 function allItems() {
-  return CONFIG.books;
+  return Object.keys(BOOKS);
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
@@ -915,11 +917,9 @@ function buildAliasMap() {
     map.push({ pattern: name.toLowerCase(), name: name });
   });
 
-  // 2. Custom aliases from aliases.json ({ "Book Name": ["alias", ...] })
-  Object.entries(ALIASES).forEach(([searchFor, patterns]) => {
-    const realBookName = items.find(item => item.toLowerCase().includes(searchFor.toLowerCase()));
-    if (!realBookName) return;
-    patterns.forEach(pattern => map.push({ pattern, name: realBookName }));
+  // 2. Shorthand aliases from books.json
+  Object.entries(BOOKS).forEach(([name, patterns]) => {
+    patterns.forEach(pattern => map.push({ pattern, name }));
   });
 
   return map;
